@@ -1,0 +1,12 @@
+.DS_Store
+.Rhistory
+R/.Rhistory
+.Rproj.user/
+.RData
+.Ruserdata
+.Renviron
+*.tar.gz
+*.Rcheck/
+outputs/
+simulation_outputs/
+simulation_report.html

@@ -1,0 +1,15 @@
+^\.DS_Store$
+^\.Rhistory$
+^tests/\.DS_Store$
+^\.\.Rcheck$
+^R/\.Rhistory$
+^\.git$
+^\.gitignore$
+^\.github$
+^\.Rproj\.user$
+^simulation_outputs$
+^outputs$
+^presentations$
+^remote_server_terminal_commands\.md$
+^simulation_report\.(md|html)$
+^CONTRIBUTING\.md$

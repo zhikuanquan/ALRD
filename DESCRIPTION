@@ -1,0 +1,23 @@
+Package: ALRD
+Title: Augmented Longitudinal Residual Difference Learning
+Version: 0.0.0.9000
+Authors@R: 
+    person("Zhikuan", "Quan", email = "zkquan@ucdavis.edu", role = c("aut", "cre"))
+Author: Zhikuan Quan [aut, cre]
+Maintainer: Zhikuan Quan <zkquan@ucdavis.edu>
+Description: Implements first-version tools for longitudinal residual difference
+    learning (LRD) and augmented longitudinal residual difference learning (ALRD)
+    for estimating individualized treatment effects from longitudinal data.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1.0)
+Suggests:
+    glmnet,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

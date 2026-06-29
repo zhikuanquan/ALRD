@@ -1,0 +1,40 @@
+---
+title: "Introduction to ALRD"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to ALRD}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+This vignette introduces the first package workflow for Project 1.
+
+```{r}
+library(ALRD)
+
+set.seed(100)
+dat <- data.frame(
+  id = rep(1:40, each = 3),
+  time = rep(1:3, times = 40)
+)
+dat$x <- rnorm(nrow(dat))
+dat$a <- rbinom(nrow(dat), 1, plogis(0.2 + 0.5 * dat$x))
+dat$y <- 1 + dat$x + dat$a * (0.5 + 0.25 * dat$x) +
+  rnorm(nrow(dat), sd = 0.4)
+
+fit <- fit_lrd(
+  data = dat,
+  id = "id",
+  time = "time",
+  treatment = "a",
+  outcome = "y",
+  covariates = "x",
+  covariance = "ar1"
+)
+
+head(predict_ite(fit, dat))
+```
