@@ -35,9 +35,9 @@ weighted longitudinal loss
 
 $$
 \sum_{i=1}^{n} \frac{1}{\pi_{T_i}(Z_i)}
-\left\{\mathbf{Y}_i - \frac{T_i}{2}\mathbf{f}(\mathbf{X}_i)\right\}^{\mathsf{T}}
+\left\lbrace\mathbf{Y}_i - \frac{T_i}{2}\mathbf{f}(\mathbf{X}_i)\right\rbrace^{\mathsf{T}}
 V_i^{-1}
-\left\{\mathbf{Y}_i - \frac{T_i}{2}\mathbf{f}(\mathbf{X}_i)\right\}.
+\left\lbrace\mathbf{Y}_i - \frac{T_i}{2}\mathbf{f}(\mathbf{X}_i)\right\rbrace.
 $$
 
 Here $\pi_{T_i}(Z_i)$ is the probability of the treatment received,
