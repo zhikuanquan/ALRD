@@ -1,0 +1,107 @@
+<!DOCTYPE html><html><head><title>R: Estimate treated-arm propensity scores</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>estimate_ps {ALRD}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Estimate treated-arm propensity scores</h2>
+
+<h3>Description</h3>
+
+<p>Fit an additive logistic regression and clip its fitted probabilities.
+The output is P(treated | covariates), not the probability of the arm received.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>estimate_ps(data, treatment, covariates, trim = c(0.01, 0.99))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="data">data</code></td>
+<td>
+<p>Complete data frame. For baseline treatment assignment, use
+one row per subject with baseline confounders.</p>
+</td></tr>
+<tr><td><code id="treatment">treatment</code></td>
+<td>
+<p>Treatment column name or bare column. Accepts numeric 0/1
+or -1/1, logical, two-level factor (second level treated), or character
+(alphabetically second value treated). Prefer explicit numeric coding.</p>
+</td></tr>
+<tr><td><code id="covariates">covariates</code></td>
+<td>
+<p>Nonempty character vector of existing covariate columns.
+An intercept is automatically included.</p>
+</td></tr>
+<tr><td><code id="trim">trim</code></td>
+<td>
+<p>Numeric length-two vector of lower and upper clipping bounds,
+satisfying 0 &lt; lower &lt; upper &lt; 1; default c(0.01, 0.99).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function has no id argument and fits one logistic-regression row per
+input row. Applying it directly to repeated data overweights subjects with
+more visits. Post-treatment covariates should not be used to model baseline
+assignment. Internally, <code><a href="fit_alrd.html">fit_alrd()</a></code> calls it on the full long data when ps
+is NULL, using the same covariates as the outcome basis.
+</p>
+<p>Clipping changes probabilities without removing observations and is not a
+remedy for a lack of overlap. Inspect score distributions by treatment and
+the fitted model's convergence. model contains the unclipped glm fit;
+scores contains clipped probabilities. No cross-fitting, balance diagnostic,
+or dedicated separation handling is provided.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with model (binomial glm), scores (one clipped probability
+per input row), treatment (column name), covariates (column names), and
+trim (the clipping bounds).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fit_alrd.html">fit_alrd()</a></code>, <code><a href="fit_lrd.html">fit_lrd()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>dat &lt;- simulate_alrd_data(n = 100, scenario = 3, seed = 10)
+baseline &lt;- dat[!duplicated(dat$id), ]
+ps_fit &lt;- estimate_ps(baseline, treatment,
+                      covariates = c("z1", "z2", "z11", "z12"))
+ps_rows &lt;- ps_fit$scores[match(dat$id, baseline$id)]
+range(ps_rows)
+fit &lt;- fit_alrd(dat, id, time, treatment, outcome,
+                covariates = c("time", "z1", "z2"), ps = ps_rows)
+head(predict_ite(fit))
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>ALRD</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

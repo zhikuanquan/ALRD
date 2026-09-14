@@ -1,30 +1,57 @@
-#' Simulate longitudinal ITE data from the paper's simulation design
+#' Simulate continuous longitudinal treatment-effect data
 #'
-#' Generates toy longitudinal data following the five simulation scenarios in
-#' the ALRD manuscript. Outcomes are generated as
-#' `Y_ij = m(Z_i, t_ij) + T_i * delta(Z_i, t_ij) / 2 + alpha_i + error_ij`,
-#' with treatment coded as `1` for treatment and `-1` for control.
+#' Generate repeated continuous outcomes with baseline binary treatment,
+#' known propensity scores, main effects, and treatment contrasts.
+#' This is a simulation helper; correspondence with the underlying method
+#' paper must be verified separately before claiming exact replication.
+#'
+#' @param n Positive integer number of independent subjects, default 200.
+#' @param times Nonempty numeric vector of distinct, finite visit times,
+#'   default 1:5. All subjects use the same schedule.
+#' @param scenario Integer 1 through 5. See the scenario definitions below.
+#' @param main_effect_size "large" (default) or "small"; scales the coefficients
+#'   entering the main effect before any squaring.
+#' @param correlated Logical; whether baseline covariates arise from correlated
+#'   latent normal variables. This does not control outcome error correlation.
+#' @param seed Optional seed passed to set.seed(). This changes the caller's
+#'   global random-number state.
 #'
 #' @details
-#' Scenarios 1--4 mirror the paper's robustness design: linear versus nonlinear
-#' main effects crossed with randomized versus logistic propensity scores.
-#' Scenario 5 uses a nonlinear ITE. The generated data also include
-#' `time_z*` columns so users can fit the linear ITE specification containing
-#' baseline covariates, time, and time-by-baseline interactions used in the
-#' simulation study.
+#' Outcomes follow Y = true_main + treatment * true_ite / 2 +
+#' subject_random_intercept + independent_error. The random intercept and error
+#' each have variance one, giving conditional exchangeable outcome error
+#' correlation 0.5 in every scenario, even with correlated = FALSE.
 #'
-#' @param n Number of subjects.
-#' @param times Numeric vector of observation times.
-#' @param scenario Integer from 1 to 5. Scenarios 1--4 vary correct versus
-#'   incorrect main-effect and propensity-score specifications; scenario 5 uses
-#'   a nonlinear ITE.
-#' @param main_effect_size Either `"large"` or `"small"`.
-#' @param correlated Whether baseline covariates should be correlated.
-#' @param seed Optional random seed.
+#' There are ten continuous and ten binary baseline covariates. When correlated
+#' is TRUE, the underlying 20-dimensional normal vector has correlation
+#' 0.5^abs(j-k); binary covariates are obtained by thresholding at zero.
+#' The observed binary correlations need not equal the latent correlations.
 #'
-#' @return A long-format data frame with outcome, treatment, true ITE,
-#'   propensity score, baseline covariates `z1`--`z20`, and time interactions
-#'   `time_z1`--`time_z20`.
+#' Scenarios 1 and 2 have randomized treatment probability 0.5, with a linear
+#' main effect in scenario 1 and a squared main effect in scenario 2.
+#' Scenarios 3 and 4 use logistic assignment with predictor
+#' z1 - z2 + z11 - z12, and respectively linear and squared main effects.
+#' Scenario 5 uses randomized treatment, a squared main effect, and nonlinear
+#' ITE terms z + 5*z^2 for z1, z2, z11, and z12, with signs +, -, +, -.
+#' For scenarios 1--4 these moderators enter as z + time*z.
+#' Each ITE also has intercept 0.5 and time slope 0.3.
+#'
+#' These are properties of the data-generating mechanism, not automatic labels
+#' of fitted-model correctness; correctness depends on the fitted basis.
+#' In particular, squared binary covariates equal the original binary covariates.
+#'
+#' @return Data frame with n * length(times) rows sorted by id and time:
+#'   id, time, treatment (-1/1), outcome, true_main, true_ite, propensity,
+#'   z1 through z20, and time_z1 through time_z20. The propensity column,
+#'   not a column named ps, contains the known treated-arm probability.
+#' @seealso [fit_alrd()], [fit_lrd()], [estimate_ps()]
+#' @examples
+#' dat <- simulate_alrd_data(n = 40, scenario = 3, seed = 9)
+#' head(dat[, c("id", "time", "treatment", "outcome", "true_ite", "propensity")])
+#' fit <- fit_lrd(dat, id, time, treatment, outcome,
+#'                covariates = c("time", "z1", "z2"),
+#'                ps = dat$propensity)
+#' head(predict_ite(fit))
 #' @export
 simulate_alrd_data <- function(n = 200, times = 1:5,
                                scenario = 1L,

@@ -1,0 +1,99 @@
+<!DOCTYPE html><html><head><title>R: Predict individualized treatment-effect contrasts</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>predict_ite {ALRD}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Predict individualized treatment-effect contrasts</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate the fitted ITE basis for an LRD or ALRD object.
+This S3 generic returns a treated-minus-control mean contrast, not a
+potential outcome, treatment probability, or confidence interval.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>predict_ite(object, newdata = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="object">object</code></td>
+<td>
+<p>Object returned by <code><a href="fit_lrd.html">fit_lrd()</a></code> or <code><a href="fit_alrd.html">fit_alrd()</a></code>.</p>
+</td></tr>
+<tr><td><code id="newdata">newdata</code></td>
+<td>
+<p>Data frame with every covariate used for fitting. NULL uses
+the stored training data. Treatment, outcome, id and time are not required
+unless included among covariates.</p>
+</td></tr>
+<tr><td><code id="...">...</code></td>
+<td>
+<p>Reserved for future extensions; currently unused.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Prediction computes B(X) * beta. Positive values favor the treated arm only
+when larger outcomes are preferred. Negative values favor the control arm
+under that same convention. For baseline treatment, a sign that varies across
+visits does not define a validated treatment-switching policy.
+</p>
+<p>Supply the same precomputed basis columns as in training. Missing covariate
+columns cause an error. Missing values may cause model.matrix() to drop rows
+silently, so check complete.cases() and output length. Factor levels and
+contrasts are not fully retained by fitted objects: preserve their training
+encoding, or use explicitly prepared numeric dummy columns with a fixed basis.
+Novel or reordered factor levels are not reliably handled.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric vector of ITE estimates in newdata order for complete numeric
+bases. With NULL, uses training-row order. Missing values and incompatible
+factor encoding can violate length or finiteness; see Details.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fit_alrd.html">fit_alrd()</a></code>, <code><a href="fit_lrd.html">fit_lrd()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>dat &lt;- simulate_alrd_data(n = 60, seed = 6)
+fit &lt;- fit_alrd(dat, id, time, treatment, outcome,
+                covariates = c("time", "z1", "time_z1"), ps = 0.5)
+grid &lt;- data.frame(time = 1:5, z1 = 0.5)
+grid$time_z1 &lt;- grid$time * grid$z1
+grid$estimated_ite &lt;- predict_ite(fit, grid)
+grid
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>ALRD</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

@@ -426,8 +426,10 @@
     sum((observed_corr - rho^lag)^2, na.rm = TRUE)
   }
 
+  # Negative bases are not real-valued for fractional time gaps.
+  lower <- if (any(lag != round(lag))) 0 else -0.95
   estimated <- tryCatch(
-    stats::optimize(objective, interval = c(-0.95, 0.95))$minimum,
+    stats::optimize(objective, interval = c(lower, 0.95))$minimum,
     error = function(e) fallback
   )
 
@@ -445,7 +447,10 @@
   }
 
   if (covariance == "exchangeable") {
-    return(.estimate_exchangeable_rho(residuals, id, fallback))
+    updated <- .estimate_exchangeable_rho(residuals, id, fallback)
+    largest_cluster <- max(tabulate(match(id, unique(id))))
+    lower <- if (largest_cluster > 1L) -1 / (largest_cluster - 1L) else -0.95
+    return(max(updated, lower + 1e-6))
   }
 
   .estimate_ar1_rho(residuals, id, time, fallback)
@@ -503,16 +508,35 @@
   # Build V_i(theta) up to a marginal variance scale. AR(1) uses the observed
   # time lag, so irregular and unbalanced visit schedules are supported.
   n <- length(time)
+  if (!is.numeric(time) || n == 0L || any(!is.finite(time))) {
+    stop("`time` must contain finite numeric measurement times.", call. = FALSE)
+  }
   if (n == 1L || covariance == "independence") {
     return(diag(1, n))
   }
 
   if (covariance == "exchangeable") {
+    if (rho <= -1 / (n - 1L)) {
+      stop(sprintf("Exchangeable `rho` must exceed -1/(m-1) for each subject; m = %d.", n),
+           call. = FALSE)
+    }
     out <- matrix(rho, nrow = n, ncol = n)
     diag(out) <- 1
     return(out)
   }
 
   distance <- abs(outer(as.numeric(time), as.numeric(time), "-"))
-  rho ^ distance
+  if (anyDuplicated(time)) {
+    stop("AR(1) requires distinct measurement times within each subject.", call. = FALSE)
+  }
+  if (rho < 0 && any(distance != round(distance))) {
+    stop("Negative AR(1) `rho` requires integer time gaps; use nonnegative `rho` for fractional gaps.",
+         call. = FALSE)
+  }
+  out <- rho ^ distance
+  if (inherits(tryCatch(chol(out), error = function(e) e), "error")) {
+    stop("AR(1) working correlation is not numerically positive definite; check time spacing and `rho`.",
+         call. = FALSE)
+  }
+  out
 }

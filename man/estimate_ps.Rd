@@ -2,33 +2,57 @@
 % Please edit documentation in R/estimate_ps.R
 \name{estimate_ps}
 \alias{estimate_ps}
-\title{Estimate propensity scores}
+\title{Estimate treated-arm propensity scores}
 \usage{
 estimate_ps(data, treatment, covariates, trim = c(0.01, 0.99))
 }
 \arguments{
-\item{data}{A data frame.}
+\item{data}{Complete data frame. For baseline treatment assignment, use
+one row per subject with baseline confounders.}
 
-\item{treatment}{Treatment column name or bare column. Numeric treatments must
-be coded as 0/1.}
+\item{treatment}{Treatment column name or bare column. Accepts numeric 0/1
+or -1/1, logical, two-level factor (second level treated), or character
+(alphabetically second value treated). Prefer explicit numeric coding.}
 
-\item{covariates}{Character vector of baseline or time-varying covariate
-column names.}
+\item{covariates}{Nonempty character vector of existing covariate columns.
+An intercept is automatically included.}
 
-\item{trim}{Numeric length-two vector giving lower and upper clipping bounds
-for predicted propensity scores.}
+\item{trim}{Numeric length-two vector of lower and upper clipping bounds,
+satisfying 0 < lower < upper < 1; default c(0.01, 0.99).}
 }
 \value{
-A list with the fitted \code{glm} object and a numeric vector of propensity
-scores.
+A list with model (binomial glm), scores (one clipped probability
+per input row), treatment (column name), covariates (column names), and
+trim (the clipping bounds).
 }
 \description{
-Fits a logistic propensity-score model for a binary treatment.
+Fit an additive logistic regression and clip its fitted probabilities.
+The output is P(treated | covariates), not the probability of the arm received.
 }
 \details{
-The LRD and ALRD objectives require \code{pi_1(Z) = P(T = 1 | Z)} and then use
-\code{pi_T(Z)} for the treatment actually received. This helper estimates
-\code{pi_1(Z)} by logistic regression when the study is observational. In a
-randomized 1:1 study, pass \code{ps = 0.5} directly to \code{\link[=fit_lrd]{fit_lrd()}} or
-\code{\link[=fit_alrd]{fit_alrd()}} instead of estimating a propensity model.
+This function has no id argument and fits one logistic-regression row per
+input row. Applying it directly to repeated data overweights subjects with
+more visits. Post-treatment covariates should not be used to model baseline
+assignment. Internally, \code{\link[=fit_alrd]{fit_alrd()}} calls it on the full long data when ps
+is NULL, using the same covariates as the outcome basis.
+
+Clipping changes probabilities without removing observations and is not a
+remedy for a lack of overlap. Inspect score distributions by treatment and
+the fitted model's convergence. model contains the unclipped glm fit;
+scores contains clipped probabilities. No cross-fitting, balance diagnostic,
+or dedicated separation handling is provided.
+}
+\examples{
+dat <- simulate_alrd_data(n = 100, scenario = 3, seed = 10)
+baseline <- dat[!duplicated(dat$id), ]
+ps_fit <- estimate_ps(baseline, treatment,
+                      covariates = c("z1", "z2", "z11", "z12"))
+ps_rows <- ps_fit$scores[match(dat$id, baseline$id)]
+range(ps_rows)
+fit <- fit_alrd(dat, id, time, treatment, outcome,
+                covariates = c("time", "z1", "z2"), ps = ps_rows)
+head(predict_ite(fit))
+}
+\seealso{
+\code{\link[=fit_alrd]{fit_alrd()}}, \code{\link[=fit_lrd]{fit_lrd()}}
 }

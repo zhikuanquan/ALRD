@@ -21,57 +21,86 @@ fit_lrd(
 )
 }
 \arguments{
-\item{data}{A data frame with one row per subject-time observation.}
+\item{data}{Data frame with one row per subject and visit. Use complete,
+finite outcomes and covariates, unique subject-time pairs, and a baseline
+treatment that is constant within subject. These requirements are not all
+enforced by the current implementation.}
 
-\item{id}{Subject identifier column name or bare column.}
+\item{id}{Subject identifier, as a bare column name or a single string.}
 
-\item{time}{Time column name or bare column.}
+\item{time}{Numeric measurement-time column, as a bare name or string.
+For AR(1), the numeric time difference determines the correlation.}
 
-\item{treatment}{Binary treatment column name or bare column.}
+\item{treatment}{Binary treatment column, as a bare name or string.
+Numeric -1/1 or 0/1 and logical values are accepted. For factors the second
+level is treated; for character values the alphabetically second value is
+treated. Explicit numeric coding is recommended.}
 
-\item{outcome}{Outcome column name or bare column.}
+\item{outcome}{Continuous numeric outcome column, as a bare name or string.}
 
-\item{covariates}{Character vector of covariate column names used in the
-treatment-effect basis.}
+\item{covariates}{Character vector of existing covariate column names.
+NULL fits an intercept-only treatment contrast. An intercept is always added.}
 
-\item{ps}{Optional propensity scores for treatment \code{T = 1}. If \code{NULL}, a
-randomized 1:1 study is assumed and \code{0.5} is used for every row.}
+\item{ps}{Treated-arm probability, as a scalar or one probability per input
+row, strictly between zero and one. NULL uses 0.5 for every row, unlike
+\code{\link[=fit_alrd]{fit_alrd()}}, which estimates scores when ps is NULL.}
 
-\item{covariance}{Working structure. One of \code{"independence"},
-\code{"exchangeable"}, or \code{"ar1"}.}
+\item{covariance}{"independence" (default), "exchangeable", or "ar1".
+See \code{\link[=working_covariance]{working_covariance()}} for mathematical definitions and restrictions.}
 
-\item{rho}{Optional working correlation parameter. If supplied, it is fixed.
-If \code{NULL}, \code{rho} is estimated iteratively unless \code{estimate_rho = FALSE}.}
+\item{rho}{Optional correlation parameter. Supplying rho fixes it by
+default; with estimate_rho = TRUE it is instead the starting value.
+If omitted, the initial value is zero for independence and 0.3 otherwise.}
 
-\item{estimate_rho}{Whether to estimate \code{rho} iteratively from residuals.
-Defaults to \code{TRUE} when \code{rho = NULL} and the covariance is not
-independence.}
+\item{estimate_rho}{Logical. Default: update rho only when rho is omitted
+and covariance is not independence. Independence always disables updating.}
 
-\item{rho_max_iter}{Maximum number of residual-correlation updates.}
+\item{rho_max_iter}{Maximum number of correlation updates, default five.}
 
-\item{rho_tol}{Convergence tolerance for absolute changes in \code{rho}.}
+\item{rho_tol}{Positive tolerance for the absolute change in rho.}
 
-\item{weights}{Optional nonnegative observation weights.}
+\item{weights}{Optional numeric vector in input-row order, multiplied by
+inverse received-treatment probabilities. Although zeros and within-subject
+variation are accepted, their handling has unresolved limitations; use
+strictly positive weights constant within subject for the documented loss.}
 }
 \value{
-An object of class \code{lrd_fit}.
+An lrd_fit list containing coefficients (with ite_ prefixes),
+fitted.values (T * estimated ITE / 2), residuals (Y minus fitted.values),
+rank, df.residual, covariance, rho, propensity_scores,
+propensity_for_received, and rho_estimation. The latter contains estimated,
+history, converged, iterations, and tolerance. Training metadata are stored
+in model_frame, basis_formula, basis_terms, id, time, treatment, outcome,
+and covariates. No standard errors or confidence intervals are computed.
 }
 \description{
-Fits the paper's LRD working generalized least-squares model by minimizing
-the inverse-propensity weighted longitudinal loss
-\verb{\{Y - T f(X) / 2\}' V^\{-1\} \{Y - T f(X) / 2\}}.
+Estimate a continuous longitudinal treatment contrast by inverse-propensity
+weighted generalized least squares without a main-effect augmentation stage.
 }
 \details{
-LRD-Learning corresponds to Equation (3) in the paper. It estimates the
-treatment scoring function \code{f(X)} directly, without first modeling the
-nuisance main effect \code{m(X)}. The design matrix used in the fitted regression
-is \code{T * B(X) / 2}, where \code{B(X)} is built from \code{covariates}. The working
-covariance \code{V_i(theta)} is incorporated by whitening each subject's block
-with \code{V_i(theta)^(-1/2)}, and the inverse propensity contribution is handled
-through the observation weights \code{1 / pi_T(Z)}.
+The design is T * B(X) / 2 with signed treatment T in -1/1.
+For weights constant within subject the criterion is the sum of
+w_i * (Y_i - T_i * B_i * beta / 2)' V_i^(-1)
+\itemize{
+\item (Y_i - T_i * B_i * beta / 2).
+There is no penalized LRD option in this release.
+Treatment coding, covariance restrictions, weight limitations, and prediction
+limitations are described in \code{\link[=fit_alrd]{fit_alrd()}} and \code{\link[=working_covariance]{working_covariance()}}.
+}
 
-If \code{rho} is not supplied and \code{covariance} is \code{"exchangeable"} or \code{"ar1"},
-the working correlation parameter is estimated iteratively: fit the ITE
-model, estimate \code{rho} from residuals, refit with the updated working
-covariance, and repeat until convergence or \code{rho_max_iter} is reached.
+For a baseline observational treatment, estimate propensity scores on one
+row per subject using baseline confounders, then map the scores to all visits.
+Automatic validation of constant within-subject treatment is not implemented.
+}
+\examples{
+dat <- simulate_alrd_data(n = 60, seed = 8)
+fit <- fit_lrd(dat, "id", "time", "treatment", "outcome",
+               covariates = c("time", "z1", "time_z1"), ps = 0.5)
+print(fit)
+head(predict_ite(fit, dat))
+constant <- fit_lrd(dat, id, time, treatment, outcome, ps = 0.5)
+constant$coefficients
+}
+\seealso{
+\code{\link[=fit_alrd]{fit_alrd()}}, \code{\link[=predict_ite]{predict_ite()}}, \code{\link[=working_covariance]{working_covariance()}}
 }

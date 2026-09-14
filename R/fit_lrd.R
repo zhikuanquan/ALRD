@@ -1,44 +1,44 @@
 #' Fit longitudinal residual difference learning
 #'
-#' Fits the paper's LRD working generalized least-squares model by minimizing
-#' the inverse-propensity weighted longitudinal loss
-#' `{Y - T f(X) / 2}' V^{-1} {Y - T f(X) / 2}`.
+#' Estimate a continuous longitudinal treatment contrast by inverse-propensity
+#' weighted generalized least squares without a main-effect augmentation stage.
+#'
+#' @inheritParams fit_alrd
+#' @param covariates Character vector of existing covariate column names.
+#'   NULL fits an intercept-only treatment contrast. An intercept is always added.
+#' @param ps Treated-arm probability, as a scalar or one probability per input
+#'   row, strictly between zero and one. NULL uses 0.5 for every row, unlike
+#'   [fit_alrd()], which estimates scores when ps is NULL.
 #'
 #' @details
-#' LRD-Learning corresponds to Equation (3) in the paper. It estimates the
-#' treatment scoring function `f(X)` directly, without first modeling the
-#' nuisance main effect `m(X)`. The design matrix used in the fitted regression
-#' is `T * B(X) / 2`, where `B(X)` is built from `covariates`. The working
-#' covariance `V_i(theta)` is incorporated by whitening each subject's block
-#' with `V_i(theta)^(-1/2)`, and the inverse propensity contribution is handled
-#' through the observation weights `1 / pi_T(Z)`.
+#' The design is T * B(X) / 2 with signed treatment T in -1/1.
+#' For weights constant within subject the criterion is the sum of
+#' w_i * (Y_i - T_i * B_i * beta / 2)' V_i^(-1)
+#' * (Y_i - T_i * B_i * beta / 2).
+#' There is no penalized LRD option in this release.
+#' Treatment coding, covariance restrictions, weight limitations, and prediction
+#' limitations are described in [fit_alrd()] and [working_covariance()].
 #'
-#' If `rho` is not supplied and `covariance` is `"exchangeable"` or `"ar1"`,
-#' the working correlation parameter is estimated iteratively: fit the ITE
-#' model, estimate `rho` from residuals, refit with the updated working
-#' covariance, and repeat until convergence or `rho_max_iter` is reached.
+#' For a baseline observational treatment, estimate propensity scores on one
+#' row per subject using baseline confounders, then map the scores to all visits.
+#' Automatic validation of constant within-subject treatment is not implemented.
 #'
-#' @param data A data frame with one row per subject-time observation.
-#' @param id Subject identifier column name or bare column.
-#' @param time Time column name or bare column.
-#' @param treatment Binary treatment column name or bare column.
-#' @param outcome Outcome column name or bare column.
-#' @param covariates Character vector of covariate column names used in the
-#'   treatment-effect basis.
-#' @param ps Optional propensity scores for treatment `T = 1`. If `NULL`, a
-#'   randomized 1:1 study is assumed and `0.5` is used for every row.
-#' @param covariance Working structure. One of `"independence"`,
-#'   `"exchangeable"`, or `"ar1"`.
-#' @param rho Optional working correlation parameter. If supplied, it is fixed.
-#'   If `NULL`, `rho` is estimated iteratively unless `estimate_rho = FALSE`.
-#' @param estimate_rho Whether to estimate `rho` iteratively from residuals.
-#'   Defaults to `TRUE` when `rho = NULL` and the covariance is not
-#'   independence.
-#' @param rho_max_iter Maximum number of residual-correlation updates.
-#' @param rho_tol Convergence tolerance for absolute changes in `rho`.
-#' @param weights Optional nonnegative observation weights.
-#'
-#' @return An object of class `lrd_fit`.
+#' @return An lrd_fit list containing coefficients (with ite_ prefixes),
+#'   fitted.values (T * estimated ITE / 2), residuals (Y minus fitted.values),
+#'   rank, df.residual, covariance, rho, propensity_scores,
+#'   propensity_for_received, and rho_estimation. The latter contains estimated,
+#'   history, converged, iterations, and tolerance. Training metadata are stored
+#'   in model_frame, basis_formula, basis_terms, id, time, treatment, outcome,
+#'   and covariates. No standard errors or confidence intervals are computed.
+#' @seealso [fit_alrd()], [predict_ite()], [working_covariance()]
+#' @examples
+#' dat <- simulate_alrd_data(n = 60, seed = 8)
+#' fit <- fit_lrd(dat, "id", "time", "treatment", "outcome",
+#'                covariates = c("time", "z1", "time_z1"), ps = 0.5)
+#' print(fit)
+#' head(predict_ite(fit, dat))
+#' constant <- fit_lrd(dat, id, time, treatment, outcome, ps = 0.5)
+#' constant$coefficients
 #' @export
 fit_lrd <- function(data, id, time, treatment, outcome, covariates = NULL,
                     ps = NULL,
@@ -171,6 +171,7 @@ fit_lrd <- function(data, id, time, treatment, outcome, covariates = NULL,
   out
 }
 
+#' @rdname print.alrd_fit
 #' @export
 print.lrd_fit <- function(x, ...) {
   cat("Longitudinal residual difference learning fit\n")

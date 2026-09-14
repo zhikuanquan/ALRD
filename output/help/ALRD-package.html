@@ -1,0 +1,74 @@
+<!DOCTYPE html><html><head><title>R: ALRD: longitudinal treatment-effect estimation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>ALRD-package {ALRD}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>ALRD: longitudinal treatment-effect estimation</h2>
+
+<h3>Description</h3>
+
+<p>Tools for continuous repeated outcomes with binary baseline treatment.
+Begin with <code><a href="simulate_alrd_data.html">simulate_alrd_data()</a></code>, fit with <code><a href="fit_lrd.html">fit_lrd()</a></code> or <code><a href="fit_alrd.html">fit_alrd()</a></code>,
+then evaluate contrasts with <code><a href="predict_ite.html">predict_ite()</a></code>. <code><a href="estimate_ps.html">estimate_ps()</a></code> supplies
+logistic assignment scores and <code><a href="working_covariance.html">working_covariance()</a></code> inspects correlations.
+</p>
+
+
+<h3>Details</h3>
+
+<p>Read <code>vignette("alrd-introduction", package = "ALRD")</code> for a
+complete workflow. This development version has known limitations in
+factor prediction, zero observation weights,
+and full-pipeline cross-validation. See the individual help pages before
+use. Missing model data are rejected, not automatically imputed or deleted.
+</p>
+
+
+<h3>Choosing a function</h3>
+
+<p>Use <code><a href="fit_lrd.html">fit_lrd()</a></code> for an unaugmented, unpenalized contrast model, or
+<code><a href="fit_alrd.html">fit_alrd()</a></code> for main-effect augmentation with optional lasso selection.
+<code><a href="predict_ite.html">predict_ite()</a></code> evaluates the full treated-minus-control contrast rather
+than the fitted treatment contribution. Pass known design probabilities
+explicitly in randomized studies. For baseline observational treatment,
+use <code><a href="estimate_ps.html">estimate_ps()</a></code> on one row per subject and map scores to visits.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p><strong>Maintainer</strong>: Zhikuan Quan <a href="mailto:zkquan@ucdavis.edu">zkquan@ucdavis.edu</a>
+</p>
+<p>Authors:
+</p>
+
+<ul>
+<li><p> Zhikuan Quan <a href="mailto:zkquan@ucdavis.edu">zkquan@ucdavis.edu</a>
+</p>
+</li></ul>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fit_alrd.html">fit_alrd()</a></code>, <code><a href="fit_lrd.html">fit_lrd()</a></code>, <code><a href="predict_ite.html">predict_ite()</a></code>, <code><a href="estimate_ps.html">estimate_ps()</a></code>,
+<code><a href="working_covariance.html">working_covariance()</a></code>, <code><a href="simulate_alrd_data.html">simulate_alrd_data()</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>ALRD</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

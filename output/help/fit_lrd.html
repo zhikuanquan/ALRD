@@ -1,0 +1,176 @@
+<!DOCTYPE html><html><head><title>R: Fit longitudinal residual difference learning</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>fit_lrd {ALRD}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fit longitudinal residual difference learning</h2>
+
+<h3>Description</h3>
+
+<p>Estimate a continuous longitudinal treatment contrast by inverse-propensity
+weighted generalized least squares without a main-effect augmentation stage.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>fit_lrd(
+  data,
+  id,
+  time,
+  treatment,
+  outcome,
+  covariates = NULL,
+  ps = NULL,
+  covariance = c("independence", "exchangeable", "ar1"),
+  rho = NULL,
+  estimate_rho = NULL,
+  rho_max_iter = 5L,
+  rho_tol = 0.001,
+  weights = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="data">data</code></td>
+<td>
+<p>Data frame with one row per subject and visit. Use complete,
+finite outcomes and covariates, unique subject-time pairs, and a baseline
+treatment that is constant within subject. These requirements are not all
+enforced by the current implementation.</p>
+</td></tr>
+<tr><td><code id="id">id</code></td>
+<td>
+<p>Subject identifier, as a bare column name or a single string.</p>
+</td></tr>
+<tr><td><code id="time">time</code></td>
+<td>
+<p>Numeric measurement-time column, as a bare name or string.
+For AR(1), the numeric time difference determines the correlation.</p>
+</td></tr>
+<tr><td><code id="treatment">treatment</code></td>
+<td>
+<p>Binary treatment column, as a bare name or string.
+Numeric -1/1 or 0/1 and logical values are accepted. For factors the second
+level is treated; for character values the alphabetically second value is
+treated. Explicit numeric coding is recommended.</p>
+</td></tr>
+<tr><td><code id="outcome">outcome</code></td>
+<td>
+<p>Continuous numeric outcome column, as a bare name or string.</p>
+</td></tr>
+<tr><td><code id="covariates">covariates</code></td>
+<td>
+<p>Character vector of existing covariate column names.
+NULL fits an intercept-only treatment contrast. An intercept is always added.</p>
+</td></tr>
+<tr><td><code id="ps">ps</code></td>
+<td>
+<p>Treated-arm probability, as a scalar or one probability per input
+row, strictly between zero and one. NULL uses 0.5 for every row, unlike
+<code><a href="fit_alrd.html">fit_alrd()</a></code>, which estimates scores when ps is NULL.</p>
+</td></tr>
+<tr><td><code id="covariance">covariance</code></td>
+<td>
+<p>&quot;independence&quot; (default), &quot;exchangeable&quot;, or &quot;ar1&quot;.
+See <code><a href="working_covariance.html">working_covariance()</a></code> for mathematical definitions and restrictions.</p>
+</td></tr>
+<tr><td><code id="rho">rho</code></td>
+<td>
+<p>Optional correlation parameter. Supplying rho fixes it by
+default; with estimate_rho = TRUE it is instead the starting value.
+If omitted, the initial value is zero for independence and 0.3 otherwise.</p>
+</td></tr>
+<tr><td><code id="estimate_rho">estimate_rho</code></td>
+<td>
+<p>Logical. Default: update rho only when rho is omitted
+and covariance is not independence. Independence always disables updating.</p>
+</td></tr>
+<tr><td><code id="rho_max_iter">rho_max_iter</code></td>
+<td>
+<p>Maximum number of correlation updates, default five.</p>
+</td></tr>
+<tr><td><code id="rho_tol">rho_tol</code></td>
+<td>
+<p>Positive tolerance for the absolute change in rho.</p>
+</td></tr>
+<tr><td><code id="weights">weights</code></td>
+<td>
+<p>Optional numeric vector in input-row order, multiplied by
+inverse received-treatment probabilities. Although zeros and within-subject
+variation are accepted, their handling has unresolved limitations; use
+strictly positive weights constant within subject for the documented loss.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The design is T * B(X) / 2 with signed treatment T in -1/1.
+For weights constant within subject the criterion is the sum of
+w_i * (Y_i - T_i * B_i * beta / 2)' V_i^(-1)
+</p>
+
+<ul>
+<li><p> (Y_i - T_i * B_i * beta / 2).
+There is no penalized LRD option in this release.
+Treatment coding, covariance restrictions, weight limitations, and prediction
+limitations are described in <code><a href="fit_alrd.html">fit_alrd()</a></code> and <code><a href="working_covariance.html">working_covariance()</a></code>.
+</p>
+</li></ul>
+
+<p>For a baseline observational treatment, estimate propensity scores on one
+row per subject using baseline confounders, then map the scores to all visits.
+Automatic validation of constant within-subject treatment is not implemented.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An lrd_fit list containing coefficients (with ite_ prefixes),
+fitted.values (T * estimated ITE / 2), residuals (Y minus fitted.values),
+rank, df.residual, covariance, rho, propensity_scores,
+propensity_for_received, and rho_estimation. The latter contains estimated,
+history, converged, iterations, and tolerance. Training metadata are stored
+in model_frame, basis_formula, basis_terms, id, time, treatment, outcome,
+and covariates. No standard errors or confidence intervals are computed.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fit_alrd.html">fit_alrd()</a></code>, <code><a href="predict_ite.html">predict_ite()</a></code>, <code><a href="working_covariance.html">working_covariance()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>dat &lt;- simulate_alrd_data(n = 60, seed = 8)
+fit &lt;- fit_lrd(dat, "id", "time", "treatment", "outcome",
+               covariates = c("time", "z1", "time_z1"), ps = 0.5)
+print(fit)
+head(predict_ite(fit, dat))
+constant &lt;- fit_lrd(dat, id, time, treatment, outcome, ps = 0.5)
+constant$coefficients
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>ALRD</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

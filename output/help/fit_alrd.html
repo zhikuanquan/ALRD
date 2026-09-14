@@ -1,0 +1,262 @@
+<!DOCTYPE html><html><head><title>R: Fit augmented longitudinal residual difference learning</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>fit_alrd {ALRD}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fit augmented longitudinal residual difference learning</h2>
+
+<h3>Description</h3>
+
+<p>Estimate a continuous longitudinal treatment contrast in two stages:
+fit a main-effect model, then regress the residualized outcome on the
+signed treatment multiplied by a covariate basis divided by two.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>fit_alrd(
+  data,
+  id,
+  time,
+  treatment,
+  outcome,
+  covariates,
+  ps = NULL,
+  penalty = c("none", "lasso"),
+  refit = TRUE,
+  nfolds = 5L,
+  lambda = NULL,
+  seed = NULL,
+  standardize = TRUE,
+  covariance = c("independence", "exchangeable", "ar1"),
+  rho = NULL,
+  estimate_rho = NULL,
+  rho_max_iter = 5L,
+  rho_tol = 0.001,
+  weights = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="data">data</code></td>
+<td>
+<p>Data frame with one row per subject and visit. Use complete,
+finite outcomes and covariates, unique subject-time pairs, and a baseline
+treatment that is constant within subject. These requirements are not all
+enforced by the current implementation.</p>
+</td></tr>
+<tr><td><code id="id">id</code></td>
+<td>
+<p>Subject identifier, as a bare column name or a single string.</p>
+</td></tr>
+<tr><td><code id="time">time</code></td>
+<td>
+<p>Numeric measurement-time column, as a bare name or string.
+For AR(1), the numeric time difference determines the correlation.</p>
+</td></tr>
+<tr><td><code id="treatment">treatment</code></td>
+<td>
+<p>Binary treatment column, as a bare name or string.
+Numeric -1/1 or 0/1 and logical values are accepted. For factors the second
+level is treated; for character values the alphabetically second value is
+treated. Explicit numeric coding is recommended.</p>
+</td></tr>
+<tr><td><code id="outcome">outcome</code></td>
+<td>
+<p>Continuous numeric outcome column, as a bare name or string.</p>
+</td></tr>
+<tr><td><code id="covariates">covariates</code></td>
+<td>
+<p>Character vector of existing column names, with at least
+one entry. An intercept is added. The same basis is used for both stages.
+Construct interactions or nonlinear basis columns before fitting.</p>
+</td></tr>
+<tr><td><code id="ps">ps</code></td>
+<td>
+<p>Probability of the treated arm, either a scalar or a numeric
+vector in input-row order, strictly between zero and one. For baseline
+assignment repeat the subject-level probability across visits.
+NULL estimates scores from all rows and all covariates via <code><a href="estimate_ps.html">estimate_ps()</a></code>.
+For a randomized study supply its known assignment probability explicitly.</p>
+</td></tr>
+<tr><td><code id="penalty">penalty</code></td>
+<td>
+<p>&quot;none&quot; (default) or &quot;lasso&quot;. Lasso is applied to both stages
+and requires the suggested package glmnet.</p>
+</td></tr>
+<tr><td><code id="refit">refit</code></td>
+<td>
+<p>Logical; for lasso, refit selected ITE columns without penalty.
+The main-effect stage is not refitted. Ignored for unpenalized fitting.</p>
+</td></tr>
+<tr><td><code id="nfolds">nfolds</code></td>
+<td>
+<p>Requested number of subject-level folds; default five.
+Use at least three subjects and three folds. The implementation caps the
+number at the observed subject count; two folds fail in cv.glmnet().</p>
+</td></tr>
+<tr><td><code id="lambda">lambda</code></td>
+<td>
+<p>Optional lambda sequence passed separately to each stage's
+cv.glmnet() call. Each stage selects its own lambda.min; this is not a
+fixed-lambda argument.</p>
+</td></tr>
+<tr><td><code id="seed">seed</code></td>
+<td>
+<p>Optional seed for subject-fold assignment. The fold helper
+restores the caller's random-number state.</p>
+</td></tr>
+<tr><td><code id="standardize">standardize</code></td>
+<td>
+<p>Logical passed to glmnet for the transformed design.
+Defaults to TRUE. Ignored for unpenalized fitting.</p>
+</td></tr>
+<tr><td><code id="covariance">covariance</code></td>
+<td>
+<p>&quot;independence&quot; (default), &quot;exchangeable&quot;, or &quot;ar1&quot;.
+See <code><a href="working_covariance.html">working_covariance()</a></code> for mathematical definitions and restrictions.</p>
+</td></tr>
+<tr><td><code id="rho">rho</code></td>
+<td>
+<p>Optional correlation parameter. Supplying rho fixes it by
+default; with estimate_rho = TRUE it is instead the starting value.
+If omitted, the initial value is zero for independence and 0.3 otherwise.</p>
+</td></tr>
+<tr><td><code id="estimate_rho">estimate_rho</code></td>
+<td>
+<p>Logical. Default: update rho only when rho is omitted
+and covariance is not independence. Independence always disables updating.</p>
+</td></tr>
+<tr><td><code id="rho_max_iter">rho_max_iter</code></td>
+<td>
+<p>Maximum number of correlation updates, default five.</p>
+</td></tr>
+<tr><td><code id="rho_tol">rho_tol</code></td>
+<td>
+<p>Positive tolerance for the absolute change in rho.</p>
+</td></tr>
+<tr><td><code id="weights">weights</code></td>
+<td>
+<p>Optional numeric vector in input-row order, multiplied by
+inverse received-treatment probabilities. Although zeros and within-subject
+variation are accepted, their handling has unresolved limitations; use
+strictly positive weights constant within subject for the documented loss.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>With signed treatment T, the model is Y = m(X) + T * delta(X) / 2 + error.
+Both stages use an intercept-containing model matrix. A subject block is
+whitened with C = chol(solve(V)); square-root row weights are applied
+after whitening. The scalar subject-weighted loss is recovered when weights
+are constant within subject. Arbitrary row weights instead give a quadratic
+form C' W C and require a separate statistical specification.
+</p>
+<p>Lasso leaves basis columns whose names contain &quot;Intercept&quot; unpenalized
+and selects lambda.min. The saved lambda_1se is informational, not the
+selected tuning rule. Selected terms refer to design columns, which may
+include an intercept or individual factor contrasts.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An alrd_fit list. Important components are:
+</p>
+
+<dl>
+<dt>coefficients</dt><dd><p>Named ITE-basis coefficients, with an ite_ prefix;
+after refitting if requested.</p>
+</dd>
+<dt>fitted.values</dt><dd><p>Fitted treatment contribution T * delta / 2 to the
+residualized response, not the full fitted outcome or the ITE itself.</p>
+</dd>
+<dt>residuals</dt><dd><p>Outcome minus main effect and treatment contribution.</p>
+</dd>
+<dt>main_model, main_effect</dt><dd><p>First-stage fit and predictions.</p>
+</dd>
+<dt>ps_model</dt><dd><p>Result of estimate_ps(), or NULL for supplied scores.</p>
+</dd>
+<dt>propensity_scores, propensity_for_received</dt><dd><p>Treated-arm scores
+and received-arm probabilities.</p>
+</dd>
+<dt>rho, covariance, rho_estimation</dt><dd><p>Working correlation and structure;
+estimation flag, history, convergence, iterations, and tolerance.</p>
+</dd>
+<dt>selected_terms, selected_covariates</dt><dd><p>Selected design-column names,
+with or without the ite_ prefix. All columns for unpenalized fitting.</p>
+</dd>
+<dt>lambda, lambda_1se, cv_model</dt><dd><p>Lasso-only tuning results for the
+ITE stage. Main-stage results are in main_model.</p>
+</dd>
+<dt>lasso_coefficients, refit_model, refit</dt><dd><p>Lasso-only penalized
+coefficients, optional refit, and refit flag.</p>
+</dd>
+<dt>model_frame, basis_terms, basis_formula</dt><dd><p>Training data and basis
+information used for prediction.</p>
+</dd>
+</dl>
+
+
+
+<h3>Validation limits</h3>
+
+<p>Subject-fold assignment keeps repeated observations together within each
+cv.glmnet() call. However, main-effect residualization, any internally
+estimated propensities, and working correlation use the full fitting sample
+before ITE-stage validation. This is not full-pipeline out-of-sample validation.
+Use a separate subject-level test sample for performance assessment.
+There are no dedicated interval or subgroup-validation methods.
+</p>
+<p>Zero observation weights can shorten residual vectors without updating
+stored row metadata. Rank deficiency can yield NA coefficients.
+Factor levels and contrasts are not fully preserved for new-data prediction.
+Inspect rho_estimation$converged: nonconvergence does not issue a warning.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fit_lrd.html">fit_lrd()</a></code>, <code><a href="predict_ite.html">predict_ite()</a></code>, <code><a href="estimate_ps.html">estimate_ps()</a></code>, <code><a href="working_covariance.html">working_covariance()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>dat &lt;- simulate_alrd_data(n = 60, seed = 4)
+covs &lt;- c("time", "z1", "z2", "time_z1", "time_z2")
+fit &lt;- fit_alrd(dat, id, time, treatment, outcome, covs,
+                ps = 0.5, covariance = "exchangeable", rho = 0.5)
+print(fit)
+head(predict_ite(fit))
+fit$rho_estimation
+if (requireNamespace("glmnet", quietly = TRUE)) {
+  sparse &lt;- fit_alrd(dat, id, time, treatment, outcome, covs,
+                    ps = 0.5, penalty = "lasso", nfolds = 3, seed = 4)
+  sparse$selected_terms
+}
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>ALRD</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

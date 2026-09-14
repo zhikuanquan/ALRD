@@ -13,3 +13,8 @@
 ^remote_server_terminal_commands\.md$
 ^simulation_report\.(md|html)$
 ^CONTRIBUTING\.md$
+^AGENTS\.md$
+^manuscript$
+^output$
+^tmp$
+^scripts$

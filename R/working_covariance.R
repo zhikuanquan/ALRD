@@ -1,22 +1,47 @@
-#' Build working covariance matrices
+#' Build subject-specific working correlation matrices
 #'
-#' Constructs subject-level working correlation matrices for longitudinal data.
+#' Construct the working correlation matrices used by LRD and ALRD fitting.
+#' Despite the function name these are unit-diagonal correlations, without a
+#' marginal variance model.
+#'
+#' @param data Data frame with complete identifiers and numeric measurement times.
+#' @param id Subject identifier column name or bare column.
+#' @param time Numeric time column name or bare column. Each subject's rows
+#'   are sorted by this column in the returned matrix.
+#' @param covariance "independence" (default), "exchangeable", or "ar1".
+#' @param rho Correlation parameter strictly between -0.99 and 0.99.
+#'   NULL gives zero for independence and 0.3 otherwise.
+#'   This inspection function does not estimate rho.
 #'
 #' @details
-#' These matrices represent the `V_i(theta)` component in the paper's
-#' longitudinal losses. They are returned mainly for inspection and diagnostics;
-#' the fitting functions build the same matrices internally and use
-#' `V_i(theta)^(-1/2)` to whiten each subject's contribution.
+#' Independence returns an identity matrix. Exchangeable correlation has
+#' off-diagonal entries rho. For a subject with m > 1 measurements, positive
+#' definiteness requires rho > -1 / (m - 1), in addition to rho < 1.
+#' Invalid values are rejected. Iterative exchangeable updates in the fitting
+#' functions stay above the lower bound for the largest subject block.
 #'
-#' @param data A data frame.
-#' @param id Subject identifier column name or bare column.
-#' @param time Time column name or bare column.
-#' @param covariance Working structure. One of `"independence"`,
-#'   `"exchangeable"`, or `"ar1"`.
-#' @param rho Correlation parameter. If `NULL`, `0` is used for independence and
-#'   `0.3` for exchangeable or AR(1).
+#' AR(1) entry (j, k) is `rho^abs(time[j] - time[k])`, using actual numeric time
+#' gaps rather than visit positions. Use positive rho with fractional times:
+#' negative rho with fractional gaps and repeated AR(1) times are rejected.
+#' AR(1) matrices are checked for numerical positive definiteness. Numeric
+#' measurement times must be finite. Changing time units changes the interpretation
+#' of rho.
 #'
-#' @return A named list of working correlation matrices, one per subject.
+#' @section Ordering:
+#' The list follows split()'s subject-group ordering and is named by subject.
+#' Matrix rows and columns correspond to ascending times within each subject;
+#' the matrices do not contain row identifiers. Match by subject name, not by
+#' assuming that list order equals the input order.
+#'
+#' @return Named list of square numeric correlation matrices, one per subject.
+#'   Invalid correlation domains cause an informative error.
+#' @seealso [fit_alrd()], [fit_lrd()]
+#' @examples
+#' visits <- data.frame(id = c("b", "a", "a", "b"),
+#'                      time = c(2, 0, 2, 0))
+#' matrices <- working_covariance(visits, id, time, "ar1", rho = 0.5)
+#' matrices[["a"]]
+#' eigen(matrices[["a"]], symmetric = TRUE)$values
 #' @export
 working_covariance <- function(data, id, time,
                                covariance = c("independence", "exchangeable", "ar1"),

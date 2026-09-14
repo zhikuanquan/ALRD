@@ -1,0 +1,132 @@
+<!DOCTYPE html><html><head><title>R: Simulate continuous longitudinal treatment-effect data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>simulate_alrd_data {ALRD}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Simulate continuous longitudinal treatment-effect data</h2>
+
+<h3>Description</h3>
+
+<p>Generate repeated continuous outcomes with baseline binary treatment,
+known propensity scores, main effects, and treatment contrasts.
+This is a simulation helper; correspondence with the underlying method
+paper must be verified separately before claiming exact replication.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>simulate_alrd_data(
+  n = 200,
+  times = 1:5,
+  scenario = 1L,
+  main_effect_size = c("large", "small"),
+  correlated = TRUE,
+  seed = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="n">n</code></td>
+<td>
+<p>Positive integer number of independent subjects, default 200.</p>
+</td></tr>
+<tr><td><code id="times">times</code></td>
+<td>
+<p>Nonempty numeric vector of distinct, finite visit times,
+default 1:5. All subjects use the same schedule.</p>
+</td></tr>
+<tr><td><code id="scenario">scenario</code></td>
+<td>
+<p>Integer 1 through 5. See the scenario definitions below.</p>
+</td></tr>
+<tr><td><code id="main_effect_size">main_effect_size</code></td>
+<td>
+<p>&quot;large&quot; (default) or &quot;small&quot;; scales the coefficients
+entering the main effect before any squaring.</p>
+</td></tr>
+<tr><td><code id="correlated">correlated</code></td>
+<td>
+<p>Logical; whether baseline covariates arise from correlated
+latent normal variables. This does not control outcome error correlation.</p>
+</td></tr>
+<tr><td><code id="seed">seed</code></td>
+<td>
+<p>Optional seed passed to set.seed(). This changes the caller's
+global random-number state.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Outcomes follow Y = true_main + treatment * true_ite / 2 +
+subject_random_intercept + independent_error. The random intercept and error
+each have variance one, giving conditional exchangeable outcome error
+correlation 0.5 in every scenario, even with correlated = FALSE.
+</p>
+<p>There are ten continuous and ten binary baseline covariates. When correlated
+is TRUE, the underlying 20-dimensional normal vector has correlation
+0.5^abs(j-k); binary covariates are obtained by thresholding at zero.
+The observed binary correlations need not equal the latent correlations.
+</p>
+<p>Scenarios 1 and 2 have randomized treatment probability 0.5, with a linear
+main effect in scenario 1 and a squared main effect in scenario 2.
+Scenarios 3 and 4 use logistic assignment with predictor
+z1 - z2 + z11 - z12, and respectively linear and squared main effects.
+Scenario 5 uses randomized treatment, a squared main effect, and nonlinear
+ITE terms z + 5<em>z^2 for z1, z2, z11, and z12, with signs +, -, +, -.
+For scenarios 1&ndash;4 these moderators enter as z + time</em>z.
+Each ITE also has intercept 0.5 and time slope 0.3.
+</p>
+<p>These are properties of the data-generating mechanism, not automatic labels
+of fitted-model correctness; correctness depends on the fitted basis.
+In particular, squared binary covariates equal the original binary covariates.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame with n * length(times) rows sorted by id and time:
+id, time, treatment (-1/1), outcome, true_main, true_ite, propensity,
+z1 through z20, and time_z1 through time_z20. The propensity column,
+not a column named ps, contains the known treated-arm probability.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fit_alrd.html">fit_alrd()</a></code>, <code><a href="fit_lrd.html">fit_lrd()</a></code>, <code><a href="estimate_ps.html">estimate_ps()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>dat &lt;- simulate_alrd_data(n = 40, scenario = 3, seed = 9)
+head(dat[, c("id", "time", "treatment", "outcome", "true_ite", "propensity")])
+fit &lt;- fit_lrd(dat, id, time, treatment, outcome,
+               covariates = c("time", "z1", "z2"),
+               ps = dat$propensity)
+head(predict_ite(fit))
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>ALRD</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

@@ -1,362 +1,261 @@
-# ALRD Package Usage Guide
+# ALRD package usage guide
 
-This guide explains the purpose, main functions, inputs, outputs, and common
-workflows for the `ALRD` R package.
+See the rendered tutorial and function reference in `output/help/` after running
+`Rscript scripts/build_help.R`. This Markdown guide mirrors the executable vignette;
+the vignette is the source for generated outputs.
 
-## 1. Package purpose
 
-`ALRD` implements longitudinal residual difference learning methods for
-estimating individualized treatment effects (ITEs) from repeated outcome data.
+## Purpose and installation
 
-The package focuses on the model decomposition
+ALRD estimates a treated-minus-control conditional mean contrast from continuous
+repeated outcomes. LRD directly models the contrast; ALRD first models a main
+effect and then fits the residualized response. Positive ITE favors treatment
+only when larger outcomes are preferred. The intended design has independent
+subjects and one baseline treatment per subject. This development version does
+not implement treatment switching, survival outcomes, or inferential intervals.
 
-```text
-Y_ij = m(X_ij) + T_i * delta(X_ij) / 2 + error_ij,
-```
-
-where:
-
-- `Y_ij` is the outcome for subject `i` at time `j`.
-- `T_i` is treatment, coded internally as `-1` for control and `1` for
-  treatment.
-- `m(X_ij)` is the nuisance main effect.
-- `delta(X_ij)` is the individualized treatment effect.
-- The goal is to estimate `delta(X)`.
-
-The package currently supports:
-
-- LRD learning.
-- ALRD learning with main-effect augmentation.
-- Non-penalized ALRD.
-- Lasso ALRD using `glmnet`.
-- Optional unpenalized refit after lasso selection.
-- Working covariance structures: independence, exchangeable, and AR(1).
-- Propensity scores supplied by the user or estimated internally.
-- Toy data simulation for local checks and examples.
-
-## 2. Installation
-
-After uploading the package to GitHub, collaborators can install it with:
+Install the evaluated local source:
 
 ```r
-install.packages("devtools")
-devtools::install_github("YOUR_GITHUB_USERNAME/ALRD")
+install.packages("/Users/zhikuan_quan/Documents/ALRD",
+                 repos = NULL, type = "source")
+install.packages("glmnet")
 ```
 
-For local development from the package folder:
+The lasso option requires glmnet. This is not a claim of CRAN availability.
+Use `help(package = "ALRD")`, `?fit_alrd`, and the other function help pages.
+
+## Prepare and check long-format data
 
 ```r
-install.packages(c("devtools", "roxygen2", "testthat", "glmnet"))
-devtools::install()
+library("ALRD")
+dat <- simulate_alrd_data(n = 100, scenario = 1, seed = 2026)
+head(dat[, c("id", "time", "treatment", "outcome", "propensity")])
+covs <- c("time", "z1", "z2", "z11", "z12",
+          "time_z1", "time_z2", "time_z11", "time_z12")
+required <- c("id", "time", "treatment", "outcome", covs)
+stopifnot(all(complete.cases(dat[, required])),
+          !anyDuplicated(dat[, c("id", "time")]),
+          all(vapply(split(dat$treatment, dat$id),
+                     function(x) length(unique(x)) == 1L, logical(1))))
+stopifnot(all(vapply(dat[, c("time", "outcome", covs)],
+                     function(x) is.numeric(x) && all(is.finite(x)), logical(1))))
 ```
 
-## 3. Main functions
+Treatment is assigned once per subject in this simulator. Numeric -1/1 or 0/1
+coding is recommended. For factor treatment the second level is treated; for
+character treatment the alphabetically second value is treated.
 
-### `simulate_alrd_data()`
+List existing columns in `covariates`; an intercept is added automatically.
+Precompute interactions such as `time_z1 = time * z1`. Both ALRD stages share
+the same basis. This compact example omits other prognostic variables in the
+simulator. The simulator's `correlated` option concerns baseline covariates;
+outcome errors always include a random intercept with conditional correlation 0.5.
 
-Creates toy longitudinal data following the simulation structure used in the
-ALRD project.
+## Hold out subjects before fitting
 
 ```r
-dat <- simulate_alrd_data(
-  n = 200,
-  scenario = 1,
-  main_effect_size = "large",
-  correlated = TRUE,
-  seed = 1
-)
+set.seed(7)
+training_ids <- sample(unique(dat$id), 75)
+train <- dat[dat$id %in% training_ids, ]
+test <- dat[!dat$id %in% training_ids, ]
+stopifnot(length(intersect(train$id, test$id)) == 0L)
 ```
 
-Important output columns:
+Keep all visits from each subject together. Fit nuisance models and tune models
+using only training subjects. Reserve the test sample for evaluation.
 
-- `id`: subject identifier.
-- `time`: repeated-measurement time.
-- `treatment`: treatment coded as `-1` or `1`.
-- `outcome`: longitudinal outcome.
-- `true_ite`: true ITE used for simulation validation.
-- `ps`: true propensity score.
-- `z1` to `z20`: baseline covariates.
-- `time_z1` to `time_z20`: time-by-covariate interactions.
-
-### `fit_lrd()`
-
-Fits longitudinal residual difference learning without main-effect
-augmentation.
+## Fit LRD and ALRD
 
 ```r
-fit_lrd_obj <- fit_lrd(
-  data = dat,
-  id = "id",
-  time = "time",
-  treatment = "treatment",
-  outcome = "outcome",
-  covariates = c("time", paste0("z", 1:20)),
-  ps = 0.5,
-  covariance = "exchangeable"
-)
+lrd <- fit_lrd(train, id, time, treatment, outcome, covs, ps = 0.5,
+               covariance = "exchangeable", rho = 0.5)
+alrd <- fit_alrd(train, id, time, treatment, outcome, covs, ps = 0.5,
+                 covariance = "exchangeable", rho = 0.5)
+print(lrd)
+print(alrd)
+head(alrd$coefficients)
 ```
 
-Use this when you want a direct baseline estimator of the ITE function.
+Supply the known treatment probability explicitly for randomized studies.
+With `ps = NULL`, LRD assumes 0.5, whereas ALRD estimates a logistic model
+from all long-data rows using the outcome covariates.
 
-### `fit_alrd()`
+The coefficients describe the ITE basis. However, `fitted.values` is the
+treatment contribution `T * estimated_ite / 2`, not the ITE or full outcome.
+For ALRD, the full fitted outcome also includes `main_effect`.
+Obtain contrasts using `predict_ite()`.
 
-Fits augmented longitudinal residual difference learning.
+## Covariance and convergence
 
 ```r
-ite_covariates <- c(
-  "time",
-  paste0("z", 1:20),
-  paste0("time_z", 1:20)
-)
-
-fit_alrd_obj <- fit_alrd(
-  data = dat,
-  id = "id",
-  time = "time",
-  treatment = "treatment",
-  outcome = "outcome",
-  covariates = ite_covariates,
-  ps = 0.5,
-  penalty = "none",
-  covariance = "exchangeable"
-)
+matrices <- working_covariance(train, id, time, "ar1", rho = 0.5)
+matrices[[1]]
+stopifnot(all(vapply(matrices, function(v) {
+  min(eigen(v, symmetric = TRUE, only.values = TRUE)$values) > 0
+}, logical(1))))
+estimated <- fit_alrd(train, id, time, treatment, outcome, covs,
+                      ps = 0.5, covariance = "exchangeable")
+estimated$rho_estimation
 ```
 
-Use `penalty = "none"` for non-penalized ALRD.
+Matrices have unit diagonal and ascending time order within each subject.
+AR(1) uses actual numeric time differences, not visit positions.
+Omitting rho triggers estimation for non-independence models. Supplied rho is
+fixed by default; `estimate_rho = TRUE` instead uses it as a starting value.
+Inspect `converged`: reaching the iteration limit does not issue a warning.
 
-Use `penalty = "lasso"` for variable selection:
+## Lasso and selected terms
 
 ```r
-fit_lasso <- fit_alrd(
-  data = dat,
-  id = "id",
-  time = "time",
-  treatment = "treatment",
-  outcome = "outcome",
-  covariates = ite_covariates,
-  ps = 0.5,
-  penalty = "lasso",
-  refit = TRUE,
-  nfolds = 5,
-  seed = 10,
-  covariance = "exchangeable"
-)
+if (requireNamespace("glmnet", quietly = TRUE)) {
+  sparse <- fit_alrd(train, id, time, treatment, outcome, covs, ps = 0.5,
+                     penalty = "lasso", refit = TRUE, nfolds = 3, seed = 7,
+                     covariance = "exchangeable", rho = 0.5)
+  print(sparse)
+  print(sparse$selected_terms)
+  print(c(lambda_min = sparse$lambda, lambda_1se = sparse$lambda_1se))
+}
 ```
 
-### `predict_ite()`
+Both stages use lasso and select their own `lambda.min`. Only the ITE stage
+is refitted without penalty. `lambda_1se` is stored but not used for selection.
+Selected terms are design columns, including possibly the intercept and factor
+contrasts, not necessarily distinct clinical variables.
 
-Predicts the estimated ITE for new or training data.
+Subject folds keep repeated rows together inside each glmnet call. However,
+main-effect residualization, internally estimated propensity scores, and
+working correlation use the full fitting sample before ITE-stage validation.
+Consequently, this CV curve does not validate the entire procedure. Use external
+test subjects and plan full-pipeline subject resampling before publication.
+
+## Predictions and evaluation
 
 ```r
-pred_ite <- predict_ite(fit_lasso, dat)
-head(pred_ite)
+prediction <- predict_ite(alrd, test)
+stopifnot(length(prediction) == nrow(test), all(is.finite(prediction)))
+subject_mse <- tapply((prediction - test$true_ite)^2, test$id, mean)
+subject_agreement <- tapply((prediction > 0) == (test$true_ite > 0), test$id, mean)
+data.frame(metric = c("Mean subject trajectory MSE", "Mean subject sign agreement"),
+            value = c(mean(subject_mse), mean(subject_agreement)))
 ```
 
-For simulated data, compare predictions with the truth:
+These explicitly defined demonstration metrics do not replace the definitions
+in the existing simulation scripts. True ITE is known only in simulation.
+This single split is a usage example, not evidence of superiority or validated
+subgroup effects. Real-data evaluation requires an appropriate observable
+policy-value or subgroup-effect estimator.
+
+Predict one fixed covariate profile over time, recomputing all interactions:
 
 ```r
-cor(pred_ite, dat$true_ite, method = "spearman")
-mean(abs(pred_ite - dat$true_ite))
+profile <- test[rep(1, 5), covs, drop = FALSE]
+profile$time <- 1:5
+for (nm in c("z1", "z2", "z11", "z12")) {
+  profile[[paste0("time_", nm)]] <- profile$time * profile[[nm]]
+}
+trajectory <- predict_ite(alrd, profile)
+plot(profile$time, trajectory, type = "b", xlab = "Time",
+     ylab = "Estimated treated-minus-control contrast")
+abline(h = 0, lty = 2, col = "grey50")
 ```
 
-### `estimate_ps()`
+A time-dependent contrast under baseline treatment does not establish that
+switching treatment at a particular visit would improve outcomes.
 
-Estimates propensity scores using logistic regression.
+## Observational baseline assignment
+
+Fit the propensity model on one row per subject with pre-treatment confounders
+and map scores to visits. For an external evaluation, fit this model on training
+subjects only and predict for held-out subjects.
 
 ```r
-ps_fit <- estimate_ps(
-  data = dat,
-  treatment = "treatment",
-  covariates = paste0("z", 1:4)
-)
-
-fit_obs <- fit_alrd(
-  data = dat,
-  id = "id",
-  time = "time",
-  treatment = "treatment",
-  outcome = "outcome",
-  covariates = ite_covariates,
-  ps = ps_fit$scores,
-  penalty = "lasso"
-)
+obs <- simulate_alrd_data(n = 100, scenario = 3, seed = 15)
+baseline <- obs[!duplicated(obs$id), ]
+ps_fit <- estimate_ps(baseline, treatment, c("z1", "z2", "z11", "z12"))
+ps_rows <- ps_fit$scores[match(obs$id, baseline$id)]
+stopifnot(length(ps_rows) == nrow(obs), all(ps_rows > 0 & ps_rows < 1))
+tapply(ps_fit$scores, baseline$treatment, range)
+obs_fit <- fit_alrd(obs, id, time, treatment, outcome, covs, ps = ps_rows,
+                    covariance = "exchangeable", rho = 0.5)
+head(predict_ite(obs_fit))
 ```
 
-### `working_covariance()`
+This last example demonstrates fitting only. Clipping does not establish
+overlap; inspect unclipped probabilities and covariate balance before analysis.
+Do not include post-treatment variables in a baseline assignment model.
 
-Constructs subject-level working correlation matrices.
+## Data dictionary and function selection
 
-```r
-cov_list <- working_covariance(
-  data = dat,
-  id = "id",
-  time = "time",
-  covariance = "ar1",
-  rho = 0.5
-)
-cov_list[[1]]
-```
+Use one row per subject and visit. Column names are configurable in fitting
+calls; the names below are those used by the running example.
 
-## 4. Propensity-score options
+| Field | Meaning | Requirement |
+|---|---|---|
+| `id` | Independent subject identifier | Nonmissing; repeats across that subject's visits. |
+| `time` | Measurement time | Finite numeric values; distinct within subject for AR(1). Units determine rho interpretation. |
+| `treatment` | Baseline treatment arm | Constant within subject; prefer numeric -1/1 or 0/1. |
+| `outcome` | Observed repeated response | Complete, finite, continuous numeric values. |
+| Covariate columns | Prognostic/moderator basis | Complete values; construct interactions before fitting. |
+| Supplied `ps` | Probability of the treated arm | Scalar or one value per data row; strictly between 0 and 1. |
+| Supplied `weights` | Additional analysis weights | Use positive values constant within subject for the documented loss. |
 
-The fitting functions accept several propensity-score workflows.
+The simulator's `true_main`, `true_ite`, and `propensity` are known generating
+quantities. Do not use truth columns as predictors in a performance comparison.
+Numeric covariate columns are the most reliable current prediction interface;
+factor encoding needs particular care as described in `?predict_ite`.
 
-### Randomized trial
+| Goal | Function | Main result |
+|---|---|---|
+| Create a reproducible example | `simulate_alrd_data()` | Long-format data with known generating quantities. |
+| Estimate baseline assignment | `estimate_ps()` | Logistic model and clipped treated-arm scores. |
+| Inspect within-subject correlation | `working_covariance()` | Named list of correlation matrices. |
+| Fit direct learning without augmentation | `fit_lrd()` | Unpenalized `lrd_fit` object. |
+| Fit augmented learning, optionally sparse | `fit_alrd()` | `alrd_fit` with both stage results. |
+| Obtain contrasts for a new covariate profile | `predict_ite()` | Numeric treated-minus-control contrasts. |
 
-If treatment is randomized 1:1:
+## Fitted-object reference
 
-```r
-ps = 0.5
-```
+Both fitting functions accept bare column names or strings for the data-role
+arguments. For programmatic calls, strings make the mapping explicit.
+`covariates` is always a character vector of existing column names.
 
-### Known propensity score
+| Component | Interpretation |
+|---|---|
+| `coefficients` | ITE coefficients; names have an `ite_` prefix. ALRD lasso coefficients may be post-selection refitted. |
+| `fitted.values` | Treatment contribution `T * estimated_ite / 2`, not the full ITE. |
+| `residuals` | Outcome minus the fitted contribution; ALRD also subtracts the main effect. |
+| `main_effect`, `main_model` | ALRD-only first-stage predictions and fitted model. |
+| `propensity_scores` | Probabilities of the treated arm in input-row order. |
+| `propensity_for_received` | Treated probability for treated subjects, its complement for controls. |
+| `rho_estimation` | List with `estimated`, `history`, `converged`, `iterations`, and `tolerance`. |
+| `selected_terms` | ALRD's ITE design-column names; all columns for unpenalized fits. |
+| `lambda`, `lambda_1se` | Lasso-only tuning summaries. The fit uses lambda.min. |
+| `lasso_coefficients`, `refit_model` | Lasso-only penalized coefficients and optional unpenalized refit. |
+| `cv_model` | Lasso-only ITE-stage cv.glmnet object; first-stage tuning is in `main_model`. |
 
-If the true or design-based propensity score is known:
+`print(fit)` reports the fit configuration. There are currently no dedicated
+`summary()`, `confint()`, or model `plot()` methods; use documented components
+and `predict_ite()` rather than interpreting a generic list summary as inference.
 
-```r
-ps = dat$ps
-```
+## Current limitations
 
-### Estimated propensity score
+| Issue | Action for this version |
+|---|---|
+| Missing fitting values | Fitting rejects them; justify a missing-data strategy first. |
+| Missing prediction values | Rows may be silently dropped; check completeness and output length. |
+| Reordered or novel factor levels | Use a consistently prepared numeric basis until factor encoding is fixed. |
+| Collinear columns | NA coefficients may propagate to all predictions; check model-matrix rank. |
+| Zero weights | Residual length can disagree with metadata; avoid until fixed. |
+| Within-subject varying weights | Their loss differs from scalar subject weighting; use positive subject-constant weights. |
+| Invalid covariance | Out-of-range exchangeable rho and duplicate AR(1) times are now rejected explicitly. |
+| Fractional times | Use nonnegative rho for AR(1); negative rho with fractional gaps is rejected. |
+| Two folds | Use at least three subjects and three folds. |
+| Inference | Dedicated standard errors, intervals, and subgroup validation are absent. |
 
-Estimate using `estimate_ps()` and pass the estimated vector:
-
-```r
-ps_fit <- estimate_ps(dat, treatment = "treatment", covariates = paste0("z", 1:4))
-ps = ps_fit$scores
-```
-
-## 5. Working covariance options
-
-Use:
-
-```r
-covariance = "independence"
-covariance = "exchangeable"
-covariance = "ar1"
-```
-
-If `rho` is omitted for exchangeable or AR(1), the package estimates it
-iteratively from residuals:
-
-```r
-fit <- fit_alrd(
-  data = dat,
-  id = "id",
-  time = "time",
-  treatment = "treatment",
-  outcome = "outcome",
-  covariates = ite_covariates,
-  ps = 0.5,
-  penalty = "lasso",
-  covariance = "ar1",
-  rho = NULL,
-  estimate_rho = TRUE
-)
-```
-
-To fix the working correlation:
-
-```r
-rho = 0.5
-```
-
-Current simulation evidence suggests that residual-based `rho` estimation may
-overestimate the true AR(1) correlation in some settings. Treat `rho` output as
-a diagnostic rather than the primary scientific estimand.
-
-## 6. Important fitted-object outputs
-
-For `fit_alrd()` with lasso:
+For troubleshooting retain the call, data dimensions, treatment coding,
+propensity range, visit times, and convergence history.
 
 ```r
-fit_lasso$coefficients
-fit_lasso$lasso_coefficients
-fit_lasso$selected_terms
-fit_lasso$selected_covariates
-fit_lasso$lambda
-fit_lasso$lambda_1se
-fit_lasso$rho
-fit_lasso$rho_iterations
-fit_lasso$rho_converged
-fit_lasso$main_model
-```
-
-Interpretation:
-
-- `coefficients`: final ITE coefficients, refit if `refit = TRUE`.
-- `lasso_coefficients`: penalized coefficients from the lasso stage.
-- `selected_terms`: selected model-matrix terms.
-- `selected_covariates`: selected covariates interpreted as treatment-effect
-  modifiers.
-- `lambda`: cross-validated lasso tuning parameter.
-- `rho`: final working correlation.
-- `rho_converged`: whether iterative `rho` estimation converged.
-
-## 7. Toy validation example
-
-Run a complete package-use example:
-
-```r
-library(ALRD)
-
-dat <- simulate_alrd_data(n = 100, scenario = 1, seed = 123)
-
-covars <- c("time", paste0("z", 1:20), paste0("time_z", 1:20))
-
-fit <- fit_alrd(
-  data = dat,
-  id = "id",
-  time = "time",
-  treatment = "treatment",
-  outcome = "outcome",
-  covariates = covars,
-  ps = 0.5,
-  penalty = "lasso",
-  refit = TRUE,
-  covariance = "exchangeable",
-  seed = 1
-)
-
-fit$selected_covariates
-pred <- predict_ite(fit, dat)
-cor(pred, dat$true_ite, method = "spearman")
-mean(abs(pred - dat$true_ite))
-```
-
-This example demonstrates:
-
-- toy data simulation;
-- non-penalized ALRD;
-- lasso ALRD;
-- selected covariates;
-- ITE prediction;
-- simple validation against the true simulated ITE.
-
-## 8. Recommended first example for collaborators
-
-```r
-library(ALRD)
-
-dat <- simulate_alrd_data(n = 100, scenario = 1, seed = 123)
-
-covars <- c("time", paste0("z", 1:20), paste0("time_z", 1:20))
-
-fit <- fit_alrd(
-  data = dat,
-  id = "id",
-  time = "time",
-  treatment = "treatment",
-  outcome = "outcome",
-  covariates = covars,
-  ps = 0.5,
-  penalty = "lasso",
-  refit = TRUE,
-  covariance = "exchangeable",
-  seed = 1
-)
-
-fit$selected_covariates
-pred <- predict_ite(fit, dat)
-cor(pred, dat$true_ite, method = "spearman")
+sessionInfo()
 ```

@@ -27,84 +27,143 @@ fit_alrd(
 )
 }
 \arguments{
-\item{data}{A data frame with one row per subject-time observation.}
+\item{data}{Data frame with one row per subject and visit. Use complete,
+finite outcomes and covariates, unique subject-time pairs, and a baseline
+treatment that is constant within subject. These requirements are not all
+enforced by the current implementation.}
 
-\item{id}{Subject identifier column name or bare column.}
+\item{id}{Subject identifier, as a bare column name or a single string.}
 
-\item{time}{Time column name or bare column.}
+\item{time}{Numeric measurement-time column, as a bare name or string.
+For AR(1), the numeric time difference determines the correlation.}
 
-\item{treatment}{Binary treatment column name or bare column.}
+\item{treatment}{Binary treatment column, as a bare name or string.
+Numeric -1/1 or 0/1 and logical values are accepted. For factors the second
+level is treated; for character values the alphabetically second value is
+treated. Explicit numeric coding is recommended.}
 
-\item{outcome}{Outcome column name or bare column.}
+\item{outcome}{Continuous numeric outcome column, as a bare name or string.}
 
-\item{covariates}{Character vector of covariate column names used in both the
-main-effect and treatment-effect models.}
+\item{covariates}{Character vector of existing column names, with at least
+one entry. An intercept is added. The same basis is used for both stages.
+Construct interactions or nonlinear basis columns before fitting.}
 
-\item{ps}{Optional propensity scores for treatment \code{T = 1}. If \code{NULL}, they
-are estimated with \code{\link[=estimate_ps]{estimate_ps()}}.}
+\item{ps}{Probability of the treated arm, either a scalar or a numeric
+vector in input-row order, strictly between zero and one. For baseline
+assignment repeat the subject-level probability across visits.
+NULL estimates scores from all rows and all covariates via \code{\link[=estimate_ps]{estimate_ps()}}.
+For a randomized study supply its known assignment probability explicitly.}
 
-\item{penalty}{Either \code{"none"} for non-penalized ALRD or \code{"lasso"} for
-lasso-penalized main-effect and ITE stages.}
+\item{penalty}{"none" (default) or "lasso". Lasso is applied to both stages
+and requires the suggested package glmnet.}
 
-\item{refit}{For lasso fits, whether to refit the ITE stage without penalty
-using the selected treatment-effect terms.}
+\item{refit}{Logical; for lasso, refit selected ITE columns without penalty.
+The main-effect stage is not refitted. Ignored for unpenalized fitting.}
 
-\item{nfolds}{Number of clustered cross-validation folds for lasso.}
+\item{nfolds}{Requested number of subject-level folds; default five.
+Use at least three subjects and three folds. The implementation caps the
+number at the observed subject count; two folds fail in cv.glmnet().}
 
-\item{lambda}{Optional lambda sequence passed to \code{glmnet::cv.glmnet()}.}
+\item{lambda}{Optional lambda sequence passed separately to each stage's
+cv.glmnet() call. Each stage selects its own lambda.min; this is not a
+fixed-lambda argument.}
 
-\item{seed}{Optional seed for clustered cross-validation folds.}
+\item{seed}{Optional seed for subject-fold assignment. The fold helper
+restores the caller's random-number state.}
 
-\item{standardize}{Whether \code{glmnet} should standardize columns for lasso.}
+\item{standardize}{Logical passed to glmnet for the transformed design.
+Defaults to TRUE. Ignored for unpenalized fitting.}
 
-\item{covariance}{Working structure. One of \code{"independence"},
-\code{"exchangeable"}, or \code{"ar1"}.}
+\item{covariance}{"independence" (default), "exchangeable", or "ar1".
+See \code{\link[=working_covariance]{working_covariance()}} for mathematical definitions and restrictions.}
 
-\item{rho}{Optional working correlation parameter. If supplied, it is fixed.
-If \code{NULL}, \code{rho} is estimated iteratively unless \code{estimate_rho = FALSE}.}
+\item{rho}{Optional correlation parameter. Supplying rho fixes it by
+default; with estimate_rho = TRUE it is instead the starting value.
+If omitted, the initial value is zero for independence and 0.3 otherwise.}
 
-\item{estimate_rho}{Whether to estimate \code{rho} iteratively from residuals.
-Defaults to \code{TRUE} when \code{rho = NULL} and the covariance is not
-independence.}
+\item{estimate_rho}{Logical. Default: update rho only when rho is omitted
+and covariance is not independence. Independence always disables updating.}
 
-\item{rho_max_iter}{Maximum number of residual-correlation updates.}
+\item{rho_max_iter}{Maximum number of correlation updates, default five.}
 
-\item{rho_tol}{Convergence tolerance for absolute changes in \code{rho}.}
+\item{rho_tol}{Positive tolerance for the absolute change in rho.}
 
-\item{weights}{Optional nonnegative observation weights.}
+\item{weights}{Optional numeric vector in input-row order, multiplied by
+inverse received-treatment probabilities. Although zeros and within-subject
+variation are accepted, their handling has unresolved limitations; use
+strictly positive weights constant within subject for the documented loss.}
 }
 \value{
-An object of class \code{alrd_fit}.
+An alrd_fit list. Important components are:
+\describe{
+\item{coefficients}{Named ITE-basis coefficients, with an ite_ prefix;
+after refitting if requested.}
+\item{fitted.values}{Fitted treatment contribution T * delta / 2 to the
+residualized response, not the full fitted outcome or the ITE itself.}
+\item{residuals}{Outcome minus main effect and treatment contribution.}
+\item{main_model, main_effect}{First-stage fit and predictions.}
+\item{ps_model}{Result of estimate_ps(), or NULL for supplied scores.}
+\item{propensity_scores, propensity_for_received}{Treated-arm scores
+and received-arm probabilities.}
+\item{rho, covariance, rho_estimation}{Working correlation and structure;
+estimation flag, history, convergence, iterations, and tolerance.}
+\item{selected_terms, selected_covariates}{Selected design-column names,
+with or without the ite_ prefix. All columns for unpenalized fitting.}
+\item{lambda, lambda_1se, cv_model}{Lasso-only tuning results for the
+ITE stage. Main-stage results are in main_model.}
+\item{lasso_coefficients, refit_model, refit}{Lasso-only penalized
+coefficients, optional refit, and refit flag.}
+\item{model_frame, basis_terms, basis_formula}{Training data and basis
+information used for prediction.}
+}
 }
 \description{
-Fits ALRD using the paper's two-stage longitudinal objective. Stage 1
-estimates the main effect \code{m(X)} with inverse-propensity weighted working
-GLS. Stage 2 estimates the ITE by fitting \code{Y - mhat(X)} to \verb{T f(X) / 2}
-under the same working covariance. A lasso version is available for
-treatment-moderator selection, with optional unpenalized refit on selected
-terms.
+Estimate a continuous longitudinal treatment contrast in two stages:
+fit a main-effect model, then regress the residualized outcome on the
+signed treatment multiplied by a covariate basis divided by two.
 }
 \details{
-The paper decomposes the longitudinal potential-outcome contrast as
-\code{Y_ij = m(X_ij) + T_i * delta(X_ij) / 2 + epsilon_ij}, where \code{T_i} is coded
-as \code{1} for treatment and \code{-1} for control. ALRD estimates the ITE function
-\code{delta(X)} through the treatment scoring function \code{f(X)}.
+With signed treatment T, the model is Y = m(X) + T * delta(X) / 2 + error.
+Both stages use an intercept-containing model matrix. A subject block is
+whitened with C = chol(solve(V)); square-root row weights are applied
+after whitening. The scalar subject-weighted loss is recovered when weights
+are constant within subject. Arbitrary row weights instead give a quadratic
+form C' W C and require a separate statistical specification.
 
-Stage 1 estimates the augmentation function \code{m(X)} by minimizing the
-inverse-propensity weighted working-covariance loss in Equation (5) of the
-paper. Stage 2 minimizes the augmented loss in Equation (6), using
-\code{Y - mhat(X)} as the outcome and \code{T * B(X) / 2} as the treatment-effect
-design matrix, where \code{B(X)} is the user-specified covariate basis.
+Lasso leaves basis columns whose names contain "Intercept" unpenalized
+and selects lambda.min. The saved lambda_1se is informational, not the
+selected tuning rule. Selected terms refer to design columns, which may
+include an intercept or individual factor contrasts.
+}
+\section{Validation limits}{
 
-When \code{penalty = "lasso"}, the same GLS whitening and inverse-propensity
-weighting are applied before \code{glmnet} is called. Cross-validation folds are
-assigned at the subject level, matching the simulation and data-analysis
-strategy in the paper. If \code{refit = TRUE}, the selected ITE terms are refit
-without penalty to reduce lasso shrinkage bias.
+Subject-fold assignment keeps repeated observations together within each
+cv.glmnet() call. However, main-effect residualization, any internally
+estimated propensities, and working correlation use the full fitting sample
+before ITE-stage validation. This is not full-pipeline out-of-sample validation.
+Use a separate subject-level test sample for performance assessment.
+There are no dedicated interval or subgroup-validation methods.
 
-If \code{rho} is not supplied and \code{covariance} is \code{"exchangeable"} or \code{"ar1"},
-ALRD estimates the working correlation iteratively. Each iteration fits the
-main-effect augmentation and ITE model at the current \code{rho}, estimates a new
-\code{rho} from the final residuals \code{Y - mhat(X) - T*fhat(X)/2}, then refits until
-the change in \code{rho} is smaller than \code{rho_tol} or \code{rho_max_iter} is reached.
+Zero observation weights can shorten residual vectors without updating
+stored row metadata. Rank deficiency can yield NA coefficients.
+Factor levels and contrasts are not fully preserved for new-data prediction.
+Inspect rho_estimation$converged: nonconvergence does not issue a warning.
+}
+
+\examples{
+dat <- simulate_alrd_data(n = 60, seed = 4)
+covs <- c("time", "z1", "z2", "time_z1", "time_z2")
+fit <- fit_alrd(dat, id, time, treatment, outcome, covs,
+                ps = 0.5, covariance = "exchangeable", rho = 0.5)
+print(fit)
+head(predict_ite(fit))
+fit$rho_estimation
+if (requireNamespace("glmnet", quietly = TRUE)) {
+  sparse <- fit_alrd(dat, id, time, treatment, outcome, covs,
+                    ps = 0.5, penalty = "lasso", nfolds = 3, seed = 4)
+  sparse$selected_terms
+}
+}
+\seealso{
+\code{\link[=fit_lrd]{fit_lrd()}}, \code{\link[=predict_ite]{predict_ite()}}, \code{\link[=estimate_ps]{estimate_ps()}}, \code{\link[=working_covariance]{working_covariance()}}
 }

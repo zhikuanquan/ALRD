@@ -2,28 +2,51 @@
 % Please edit documentation in R/predict_ite.R
 \name{predict_ite}
 \alias{predict_ite}
-\title{Predict individualized treatment effects}
+\title{Predict individualized treatment-effect contrasts}
 \usage{
 predict_ite(object, newdata = NULL, ...)
 }
 \arguments{
-\item{object}{A fitted \code{lrd_fit} or \code{alrd_fit} object.}
+\item{object}{Object returned by \code{\link[=fit_lrd]{fit_lrd()}} or \code{\link[=fit_alrd]{fit_alrd()}}.}
 
-\item{newdata}{A data frame containing the covariates used in the fitted
-treatment-effect model. If \code{NULL}, the training data are used.}
+\item{newdata}{Data frame with every covariate used for fitting. NULL uses
+the stored training data. Treatment, outcome, id and time are not required
+unless included among covariates.}
 
-\item{...}{Reserved for future extensions.}
+\item{...}{Reserved for future extensions; currently unused.}
 }
 \value{
-A numeric vector of predicted individualized treatment effects.
+Numeric vector of ITE estimates in newdata order for complete numeric
+bases. With NULL, uses training-row order. Missing values and incompatible
+factor encoding can violate length or finiteness; see Details.
 }
 \description{
-Predict individualized treatment effects
+Evaluate the fitted ITE basis for an LRD or ALRD object.
+This S3 generic returns a treated-minus-control mean contrast, not a
+potential outcome, treatment probability, or confidence interval.
 }
 \details{
-Fitted LRD and ALRD objects store coefficients for the treatment scoring
-function \code{f(X)}. Prediction therefore evaluates the same basis \code{B(X)} used in
-fitting and returns \code{B(X) \%*\% beta}, which estimates the time-specific ITE
-\verb{delta(X) = E\{Y(1) - Y(-1) | X\}}. The prediction does not depend on a
-treatment column in \code{newdata}.
+Prediction computes B(X) * beta. Positive values favor the treated arm only
+when larger outcomes are preferred. Negative values favor the control arm
+under that same convention. For baseline treatment, a sign that varies across
+visits does not define a validated treatment-switching policy.
+
+Supply the same precomputed basis columns as in training. Missing covariate
+columns cause an error. Missing values may cause model.matrix() to drop rows
+silently, so check complete.cases() and output length. Factor levels and
+contrasts are not fully retained by fitted objects: preserve their training
+encoding, or use explicitly prepared numeric dummy columns with a fixed basis.
+Novel or reordered factor levels are not reliably handled.
+}
+\examples{
+dat <- simulate_alrd_data(n = 60, seed = 6)
+fit <- fit_alrd(dat, id, time, treatment, outcome,
+                covariates = c("time", "z1", "time_z1"), ps = 0.5)
+grid <- data.frame(time = 1:5, z1 = 0.5)
+grid$time_z1 <- grid$time * grid$z1
+grid$estimated_ite <- predict_ite(fit, grid)
+grid
+}
+\seealso{
+\code{\link[=fit_alrd]{fit_alrd()}}, \code{\link[=fit_lrd]{fit_lrd()}}
 }

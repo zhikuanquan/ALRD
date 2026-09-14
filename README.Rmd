@@ -9,6 +9,18 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 # ALRD
 
+## Documentation and development status
+
+Start with the [package usage guide](docs/package_usage_guide.md) or the
+executable vignette `vignette("alrd-introduction", package = "ALRD")`.
+Run `Rscript scripts/build_help.R` from this repository to generate the
+browsable function manual at `output/help/index.html`.
+
+This is a development prototype. Read the
+[code review and collaborator tasks](docs/code_review_and_collaborator_tasks.md)
+for current prediction, covariance, weighting, and validation limitations before
+using it for a substantive analysis.
+
 `ALRD` implements the longitudinal robust direct learning methods from
 *Doubly Robust Estimation of Individualized Treatment Effects in Longitudinal
 Data*. The package directly estimates time-specific individualized treatment

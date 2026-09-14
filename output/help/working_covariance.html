@@ -1,0 +1,121 @@
+<!DOCTYPE html><html><head><title>R: Build subject-specific working correlation matrices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>working_covariance {ALRD}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Build subject-specific working correlation matrices</h2>
+
+<h3>Description</h3>
+
+<p>Construct the working correlation matrices used by LRD and ALRD fitting.
+Despite the function name these are unit-diagonal correlations, without a
+marginal variance model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>working_covariance(
+  data,
+  id,
+  time,
+  covariance = c("independence", "exchangeable", "ar1"),
+  rho = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="data">data</code></td>
+<td>
+<p>Data frame with complete identifiers and numeric measurement times.</p>
+</td></tr>
+<tr><td><code id="id">id</code></td>
+<td>
+<p>Subject identifier column name or bare column.</p>
+</td></tr>
+<tr><td><code id="time">time</code></td>
+<td>
+<p>Numeric time column name or bare column. Each subject's rows
+are sorted by this column in the returned matrix.</p>
+</td></tr>
+<tr><td><code id="covariance">covariance</code></td>
+<td>
+<p>&quot;independence&quot; (default), &quot;exchangeable&quot;, or &quot;ar1&quot;.</p>
+</td></tr>
+<tr><td><code id="rho">rho</code></td>
+<td>
+<p>Correlation parameter strictly between -0.99 and 0.99.
+NULL gives zero for independence and 0.3 otherwise.
+This inspection function does not estimate rho.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Independence returns an identity matrix. Exchangeable correlation has
+off-diagonal entries rho. For a subject with m &gt; 1 measurements, positive
+definiteness requires rho &gt; -1 / (m - 1), in addition to rho &lt; 1.
+Invalid values are rejected. Iterative exchangeable updates in the fitting
+functions stay above the lower bound for the largest subject block.
+</p>
+<p>AR(1) entry (j, k) is <code>rho^abs(time[j] - time[k])</code>, using actual numeric time
+gaps rather than visit positions. Use positive rho with fractional times:
+negative rho with fractional gaps and repeated AR(1) times are rejected.
+AR(1) matrices are checked for numerical positive definiteness. Numeric
+measurement times must be finite. Changing time units changes the interpretation
+of rho.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Named list of square numeric correlation matrices, one per subject.
+Invalid correlation domains cause an informative error.
+</p>
+
+
+<h3>Ordering</h3>
+
+<p>The list follows split()'s subject-group ordering and is named by subject.
+Matrix rows and columns correspond to ascending times within each subject;
+the matrices do not contain row identifiers. Match by subject name, not by
+assuming that list order equals the input order.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fit_alrd.html">fit_alrd()</a></code>, <code><a href="fit_lrd.html">fit_lrd()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>visits &lt;- data.frame(id = c("b", "a", "a", "b"),
+                     time = c(2, 0, 2, 0))
+matrices &lt;- working_covariance(visits, id, time, "ar1", rho = 0.5)
+matrices[["a"]]
+eigen(matrices[["a"]], symmetric = TRUE)$values
+</code></pre>
+
+<hr /><div style="text-align: center;">[Package <em>ALRD</em> version 0.0.0.9000 <a href="00Index.html">Index</a>]</div></main>
+
+</div>
+</body></html>
