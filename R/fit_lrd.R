@@ -11,10 +11,13 @@
 #'   [fit_alrd()], which estimates scores when ps is NULL.
 #'
 #' @details
-#' The design is T * B(X) / 2 with signed treatment T in -1/1.
-#' For weights constant within subject the criterion is the sum of
-#' w_i * (Y_i - T_i * B_i * beta / 2)' V_i^(-1)
-#' * (Y_i - T_i * B_i * beta / 2).
+#' The design is \eqn{T_i B_i/2}{T_i * B_i / 2}, with signed treatment
+#' \eqn{T_i \in \{-1,1\}}{T_i in {-1, 1}} and subject-specific basis matrix
+#' \eqn{B_i}{B_i}. For weights constant within subject, the criterion is
+#' \deqn{\sum_{i=1}^{n} w_i \left(\mathbf{Y}_i - \frac{T_i}{2}B_i\beta\right)^{\mathsf{T}} V_i^{-1} \left(\mathbf{Y}_i - \frac{T_i}{2}B_i\beta\right).}{sum_i w_i * (Y_i - T_i * B_i * beta / 2)' V_i^(-1) * (Y_i - T_i * B_i * beta / 2).}
+#' Here \eqn{w_i = a_i/\pi_{T_i}(Z_i)}{w_i = a_i / pi_T_i(Z_i)} combines
+#' the optional analysis weight \eqn{a_i}{a_i} (one by default) and the inverse
+#' probability of the treatment received; \eqn{V_i}{V_i} is the working correlation.
 #' There is no penalized LRD option in this release.
 #' Treatment coding, covariance restrictions, weight limitations, and prediction
 #' limitations are described in [fit_alrd()] and [working_covariance()].
@@ -24,7 +27,7 @@
 #' Automatic validation of constant within-subject treatment is not implemented.
 #'
 #' @return An lrd_fit list containing coefficients (with ite_ prefixes),
-#'   fitted.values (T * estimated ITE / 2), residuals (Y minus fitted.values),
+#'   fitted.values (\eqn{T_i\widehat{\delta}(X_{ij})/2}{T_i * estimated ITE / 2}), residuals (Y minus fitted.values),
 #'   rank, df.residual, covariance, rho, propensity_scores,
 #'   propensity_for_received, and rho_estimation. The latter contains estimated,
 #'   history, converged, iterations, and tolerance. Training metadata are stored

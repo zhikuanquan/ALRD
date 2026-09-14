@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head><title>R: Fit augmented longitudinal residual difference learning</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<link rel="stylesheet" href="katex/katex.css">
 <script type="text/javascript">
 const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
 function processMathHTML() {
@@ -9,7 +9,7 @@ function processMathHTML() {
     for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
     return;
 }</script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+<script defer src="katex/katex.js"
     onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body><div class="container"><main>
@@ -164,12 +164,17 @@ strictly positive weights constant within subject for the documented loss.</p>
 
 <h3>Details</h3>
 
-<p>With signed treatment T, the model is Y = m(X) + T * delta(X) / 2 + error.
+<p>With signed treatment <code class="reqn">T_i \in \{-1,1\}</code>, the model is
+</p>
+<p style="text-align: center;"><code class="reqn">Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.</code>
+</p>
+
+<p>Here <code class="reqn">\delta(X_{ij})</code> is the treated-minus-control contrast.
 Both stages use an intercept-containing model matrix. A subject block is
-whitened with C = chol(solve(V)); square-root row weights are applied
+whitened with <code>C = chol(solve(V))</code>, so <code class="reqn">C^{\mathsf{T}}C = V^{-1}</code>; square-root row weights are applied
 after whitening. The scalar subject-weighted loss is recovered when weights
 are constant within subject. Arbitrary row weights instead give a quadratic
-form C' W C and require a separate statistical specification.
+form <code class="reqn">C^{\mathsf{T}} W C</code> and require a separate statistical specification.
 </p>
 <p>Lasso leaves basis columns whose names contain &quot;Intercept&quot; unpenalized
 and selects lambda.min. The saved lambda_1se is informational, not the
@@ -187,7 +192,7 @@ include an intercept or individual factor contrasts.
 <dt>coefficients</dt><dd><p>Named ITE-basis coefficients, with an ite_ prefix;
 after refitting if requested.</p>
 </dd>
-<dt>fitted.values</dt><dd><p>Fitted treatment contribution T * delta / 2 to the
+<dt>fitted.values</dt><dd><p>Fitted treatment contribution <code class="reqn">T_i\widehat{\delta}(X_{ij})/2</code> to the
 residualized response, not the full fitted outcome or the ITE itself.</p>
 </dd>
 <dt>residuals</dt><dd><p>Outcome minus main effect and treatment contribution.</p>

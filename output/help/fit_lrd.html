@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head><title>R: Fit longitudinal residual difference learning</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<link rel="stylesheet" href="katex/katex.css">
 <script type="text/javascript">
 const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
 function processMathHTML() {
@@ -9,7 +9,7 @@ function processMathHTML() {
     for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
     return;
 }</script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+<script defer src="katex/katex.js"
     onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body><div class="container"><main>
@@ -122,19 +122,20 @@ strictly positive weights constant within subject for the documented loss.</p>
 
 <h3>Details</h3>
 
-<p>The design is T * B(X) / 2 with signed treatment T in -1/1.
-For weights constant within subject the criterion is the sum of
-w_i * (Y_i - T_i * B_i * beta / 2)' V_i^(-1)
+<p>The design is <code class="reqn">T_i B_i/2</code>, with signed treatment
+<code class="reqn">T_i \in \{-1,1\}</code> and subject-specific basis matrix
+<code class="reqn">B_i</code>. For weights constant within subject, the criterion is
+</p>
+<p style="text-align: center;"><code class="reqn">\sum_{i=1}^{n} w_i \left(\mathbf{Y}_i - \frac{T_i}{2}B_i\beta\right)^{\mathsf{T}} V_i^{-1} \left(\mathbf{Y}_i - \frac{T_i}{2}B_i\beta\right).</code>
 </p>
 
-<ul>
-<li><p> (Y_i - T_i * B_i * beta / 2).
+<p>Here <code class="reqn">w_i = a_i/\pi_{T_i}(Z_i)</code> combines
+the optional analysis weight <code class="reqn">a_i</code> (one by default) and the inverse
+probability of the treatment received; <code class="reqn">V_i</code> is the working correlation.
 There is no penalized LRD option in this release.
 Treatment coding, covariance restrictions, weight limitations, and prediction
 limitations are described in <code><a href="fit_alrd.html">fit_alrd()</a></code> and <code><a href="working_covariance.html">working_covariance()</a></code>.
 </p>
-</li></ul>
-
 <p>For a baseline observational treatment, estimate propensity scores on one
 row per subject using baseline confounders, then map the scores to all visits.
 Automatic validation of constant within-subject treatment is not implemented.
@@ -144,7 +145,7 @@ Automatic validation of constant within-subject treatment is not implemented.
 <h3>Value</h3>
 
 <p>An lrd_fit list containing coefficients (with ite_ prefixes),
-fitted.values (T * estimated ITE / 2), residuals (Y minus fitted.values),
+fitted.values (<code class="reqn">T_i\widehat{\delta}(X_{ij})/2</code>), residuals (Y minus fitted.values),
 rank, df.residual, covariance, rho, propensity_scores,
 propensity_for_received, and rho_estimation. The latter contains estimated,
 history, converged, iterations, and tolerance. Training metadata are stored

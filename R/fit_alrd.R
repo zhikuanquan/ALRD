@@ -53,12 +53,14 @@
 #'   strictly positive weights constant within subject for the documented loss.
 #'
 #' @details
-#' With signed treatment T, the model is Y = m(X) + T * delta(X) / 2 + error.
+#' With signed treatment \eqn{T_i \in \{-1,1\}}{T_i in {-1, 1}}, the model is
+#' \deqn{Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.}{Y_ij = m(X_ij) + T_i * delta(X_ij) / 2 + error_ij.}
+#' Here \eqn{\delta(X_{ij})}{delta(X_ij)} is the treated-minus-control contrast.
 #' Both stages use an intercept-containing model matrix. A subject block is
-#' whitened with C = chol(solve(V)); square-root row weights are applied
+#' whitened with `C = chol(solve(V))`, so \eqn{C^{\mathsf{T}}C = V^{-1}}{C' C = V^(-1)}; square-root row weights are applied
 #' after whitening. The scalar subject-weighted loss is recovered when weights
 #' are constant within subject. Arbitrary row weights instead give a quadratic
-#' form C' W C and require a separate statistical specification.
+#' form \eqn{C^{\mathsf{T}} W C}{C' W C} and require a separate statistical specification.
 #'
 #' Lasso leaves basis columns whose names contain "Intercept" unpenalized
 #' and selects lambda.min. The saved lambda_1se is informational, not the
@@ -82,7 +84,7 @@
 #'   \describe{
 #'     \item{coefficients}{Named ITE-basis coefficients, with an ite_ prefix;
 #'       after refitting if requested.}
-#'     \item{fitted.values}{Fitted treatment contribution T * delta / 2 to the
+#'     \item{fitted.values}{Fitted treatment contribution \eqn{T_i\widehat{\delta}(X_{ij})/2}{T_i * estimated ITE / 2} to the
 #'       residualized response, not the full fitted outcome or the ITE itself.}
 #'     \item{residuals}{Outcome minus main effect and treatment contribution.}
 #'     \item{main_model, main_effect}{First-stage fit and predictions.}

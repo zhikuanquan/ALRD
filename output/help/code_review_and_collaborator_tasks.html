@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>code_review_and_collaborator_tasks</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="R.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">code_review_and_collaborator_tasks</h1>
+</header>
+<h1 id="alrd-code-review-and-collaborator-work-plan">ALRD code review and collaborator work plan</h1>
+<p>Follow-up: the focused weekly update in <code>weekly_method_check.md</code> verifies the method equations against the located 23-page manuscript and fixes covariance domain checks and correlation-update bounds. The findings below preserve the original pre-fix audit; its covariance failures and source-unavailable statement are historical, not the current implementation status.</p>
+<p>Review date: 2026-09-13. Scope: the six exported functions, their internal helpers, registered S3 methods, existing tests, vignette, and package build. Reviewed development version: 0.0.0.9000 in Documents/ALRD. The GitHub checkout was not used as the source of this review.</p>
+<h2 id="assessment">Assessment</h2>
+<p>The package contains a useful working prototype of longitudinal direct and augmented learning. It is ready for controlled development examples with a complete numeric basis, positive subject-constant weights, and admissible correlation settings. It is not yet ready for broad scientific use or a JSS submission: prediction contracts, covariance checks, and full-pipeline validation need work. Passing the existing tests does not establish statistical validity across the public API.</p>
+<p>The reference article, Huling and Yu (2021), <em>Subgroup Identification Using the personalized Package</em>, JSS 98(5), DOI 10.18637/jss.v098.i05, organizes its software section around the complete user workflow. ALRD currently implements the fitting core but lacks much of that diagnostic and validation workflow. Its multi-treatment and multiple-outcome features should not be copied simply to match the reference paper’s breadth.</p>
+<p>This is an implementation review, not verification of the ALRD method paper’s theorems or a new simulation study. The referenced ALRD methodology paper was not supplied in this task. In particular, two-stage weighting alone does not justify an unconditional claim of double robustness for every fitted basis, penalty, covariate history, and covariance specification.</p>
+<h2 id="reproducible-evidence">Reproducible evidence</h2>
+<p>Run from the development repository:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ex">Rscript</span> -e <span class="st">&#39;testthat::test_local(reporter=&quot;summary&quot;)&#39;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="ex">Rscript</span> scripts/audit_package_contracts.R</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="ex">Rscript</span> scripts/build_help.R</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="ex">R</span> CMD build . --no-manual</span></code></pre></div>
+<p>The audit is diagnostic, not a regression suite designed to pass. Convert each defect into a regression test when implementing its fix. Audit output and session information are saved in <code>output/review/contract-audit.txt</code>.</p>
+<p>Verification completed: <code>R CMD build . --no-manual</code> succeeded and <code>R CMD check --no-manual --output=output/review ALRD_0.0.0.9000.tar.gz</code> finished with <strong>Status: OK</strong>, including installed examples, Rd cross-references, tests, and rebuilding vignette outputs. Logs are in <code>output/review/build.log</code> and <code>output/review/check.log</code>. This was a normal package check, not <code>--as-cran</code>; PDF manual generation was excluded. R 4.4.2 and glmnet 5.0 were used. The separate audit defects remain present despite a clean package check.</p>
+<p>Parsed R expressions in all six existing public-function source files were compared to their Git HEAD versions and found identical after documentation edits. The new package overview adds help metadata, not an estimator.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check</th>
+<th>Observed result</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Existing suite</td>
+<td>Six tests, 21 expectations pass</td>
+<td>Basic fitting and return-object checks work.</td>
+</tr>
+<tr class="even">
+<td>Subject-constant weighted LRD vs direct matrix GLS</td>
+<td>Maximum coefficient difference 6.7e-16</td>
+<td>The supported scalar-weight whitening calculation agrees numerically.</td>
+</tr>
+<tr class="odd">
+<td>Reverse input order with aligned row weights, fixed rho</td>
+<td>Maximum coefficient difference 3.6e-15</td>
+<td>Ordering is consistent in this numeric example.</td>
+</tr>
+<tr class="even">
+<td>One zero observation weight</td>
+<td>200 training rows, 199 residuals</td>
+<td>Fit vectors and metadata can lose alignment.</td>
+</tr>
+<tr class="odd">
+<td>Exchangeable rho = -0.5 with five visits</td>
+<td>Minimum eigenvalue approximately -1</td>
+<td>Public covariance helper returns an invalid correlation matrix.</td>
+</tr>
+<tr class="even">
+<td>AR(1), times 0 and 0.5, rho = -0.5</td>
+<td>Non-finite off-diagonal entries</td>
+<td>Fractional time and negative rho need a domain restriction.</td>
+</tr>
+<tr class="odd">
+<td>Reordered factor levels in prediction</td>
+<td>200 non-finite predictions</td>
+<td>Training contrasts and levels are not preserved.</td>
+</tr>
+<tr class="even">
+<td>One missing prediction covariate</td>
+<td>200 rows, 199 predictions</td>
+<td>Missing values silently drop rows.</td>
+</tr>
+<tr class="odd">
+<td>Duplicate design column</td>
+<td>200 non-finite predictions</td>
+<td>Rank deficiency propagates through coefficients.</td>
+</tr>
+<tr class="even">
+<td>Two lasso folds</td>
+<td>Error from glmnet</td>
+<td>The helper’s allowance of two folds conflicts with the solver.</td>
+</tr>
+<tr class="odd">
+<td>rho = 0.5 and estimate_rho = TRUE</td>
+<td>rho updated to approximately 0.7517</td>
+<td>Supplied rho is fixed only by default, not unconditionally.</td>
+</tr>
+<tr class="even">
+<td>Varying row weights: implemented vs symmetric weighted quadratic form</td>
+<td>27.33333 vs 31.57107</td>
+<td>The weight placement changes the loss; define the intended extension.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="findings-requiring-implementation-work">Findings requiring implementation work</h2>
+<h3 id="p1-preserve-prediction-encoding-and-row-count">P1: Preserve prediction encoding and row count</h3>
+<p>In <code>R/predict_ite.R</code>, both methods reconstruct a model matrix from stored terms without stored training factor levels and contrasts. They then index the coefficients by new matrix column names. Reordered levels can change the reference category and request nonexistent coefficients. Missing covariates are checked, but missing values are not, allowing rows to disappear.</p>
+<p>Store the training levels, contrasts, and design-column schema. Validate new levels explicitly, align the new design to the training columns, and define an NA policy that either errors or returns an NA in the original row position. Add a test where prediction on the same values with reordered factor levels is unchanged, plus tests for single-level subsets, novel levels, and missing rows.</p>
+<h3 id="p1-resolve-zero-weights-and-covariance-domain-validation">P1: Resolve zero weights and covariance domain validation</h3>
+<p><code>.fit_gls()</code> drops zero-weight rows internally while the fitted-object metadata and correlation-update inputs retain all rows. This can shorten residuals and misalign subsequent rho updates. Decide whether zero weights mean explicit exclusion or retained rows with zero contribution; preserve a row map and consistent outputs under that decision.</p>
+<p><code>.default_rho()</code> checks only a generic interval, while exchangeable correlation also requires <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>&gt;</mo><mo>−</mo><mn>1</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\rho &gt; -1/(m-1)</annotation></semantics></math> for every subject. The residual updater clamps to [-0.95, 0.95], which does not ensure that condition. <code>.correlation_matrix()</code> allows duplicate AR(1) times and negative rho with fractional lags. Validate finite times, unique subject-time pairs, positive definiteness, and admissible rho before solving; constrain iterative updates to the same valid domain.</p>
+<h3 id="p1-specify-weights-before-extending-the-statistical-claims">P1: Specify weights before extending the statistical claims</h3>
+<p>In <code>.fit_gls()</code> and <code>.transform_gls()</code>, the Cholesky factor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>, satisfying <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>C</mi><mstyle mathvariant="sans-serif"><mi>𝖳</mi></mstyle></msup><mi>C</mi><mo>=</mo><msup><mi>V</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">C^{\mathsf{T}}C = V^{-1}</annotation></semantics></math>, is applied first, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>W</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><annotation encoding="application/x-tex">W^{1/2}</annotation></semantics></math>. The quadratic form is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mstyle mathvariant="bold"><mi>𝐞</mi></mstyle><mstyle mathvariant="sans-serif"><mi>𝖳</mi></mstyle></msup><msup><mi>C</mi><mstyle mathvariant="sans-serif"><mi>𝖳</mi></mstyle></msup><mi>W</mi><mi>C</mi><mstyle mathvariant="bold"><mi>𝐞</mi></mstyle><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{e}^{\mathsf{T}} C^{\mathsf{T}} W C \mathbf{e}.
+</annotation></semantics></math></p>
+<p>It equals the intended scalar subject-weighted form when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math> is constant within subject. It does not generally equal</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mstyle mathvariant="bold"><mi>𝐞</mi></mstyle><mstyle mathvariant="sans-serif"><mi>𝖳</mi></mstyle></msup><msup><mi>W</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><msup><mi>V</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>W</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><mstyle mathvariant="bold"><mi>𝐞</mi></mstyle><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf{e}^{\mathsf{T}} W^{1/2} V^{-1} W^{1/2} \mathbf{e}.
+</annotation></semantics></math></p>
+<p>Neither arbitrary-row-weight extension should be called correct without a defined estimand and loss.</p>
+<p>For the first release, consider requiring subject-constant propensity and analysis weights for the baseline-treatment objective. Otherwise write the intended row-weighted objective and derive a matching solver before changing weight placement. Keep the direct GLS oracle test for the supported case.</p>
+<h3 id="p1-validate-the-complete-two-stage-pipeline">P1: Validate the complete two-stage pipeline</h3>
+<p><code>fit_alrd()</code> computes the main-effect predictions and residualized response before the ITE-stage <code>.fit_lasso_gls()</code> call. Each stage’s glmnet folds preserve subjects, but ITE validation outcomes have already influenced the full-sample main-effect fit. Automatic propensity estimation and rho estimation also use the full fitting sample. Clustered folds alone do not provide a held-out evaluation of the entire procedure.</p>
+<p>Add outer subject splits and estimate the propensity model, augmentation, working correlation, selection, and refit from each training split only. Specify whether tuning and final performance evaluation use distinct nested layers. Decide with the method lead whether cross-fitting is also required for the estimator itself; that is a separate methodological choice from honest testing.</p>
+<h3 id="p1-enforce-the-baseline-assignment-and-rank-contracts">P1: Enforce the baseline-assignment and rank contracts</h3>
+<p>The public fit functions accept treatment changes within a subject, although their stated model uses a single T_i. The existing first two tests and original vignette used row-varying treatments. Replace those examples/tests with the intended design and add explicit unsupported-design checks.</p>
+<p>Automatic ALRD propensity estimation fits the treatment on all visits using the outcome basis, including time if supplied. This is not automatically a baseline-confounder model. With unequal visits it also gives greater likelihood weight to subjects with more rows. Provide separate propensity covariates or a subject-level score interface. Decide an explicit common default for ps across the two fit functions rather than silently assuming observational or randomized assignment.</p>
+<p>QR fitting can return NA coefficients for aliased columns; multiplication by that coefficient vector can make all predictions NA. Decide whether to reject rank deficiency or support estimable predictions with a documented alias policy.</p>
+<h3 id="p2-finish-solver-controls-and-diagnostics">P2: Finish solver controls and diagnostics</h3>
+<ul>
+<li>Require at least three folds for the current glmnet workflow; validate integer nfolds, rho_max_iter, simulator n/scenario, and logical controls explicitly.</li>
+<li>Separate tuning controls for augmentation and ITE; expose lambda.min versus lambda.1se as a deliberate policy. Record fold IDs for reproducibility.</li>
+<li>Use explicit intercept identity rather than matching any column name containing “Intercept” to decide penalty exemptions.</li>
+<li>Distinguish selected columns, intercept inclusion, and original variables. Forced intercept inclusion during refit may differ from selected_terms when its penalized coefficient is numerically zero.</li>
+<li>Warn on failed correlation convergence and expose fitting diagnostics through dedicated summary methods. A generic list summary is not a model summary.</li>
+<li>Add row/data validation for Inf, empty data, missing treatment, and treatment level counts. Existing complete.cases() checks do not reject Inf.</li>
+<li>Consolidate duplicated GLS and prediction code. Preallocate transformed matrices rather than growing them with repeated rbind(). Profile before selecting performance targets or claiming speed improvements.</li>
+</ul>
+<h2 id="function-by-function-additions">Function-by-function additions</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Existing capability</th>
+<th>Next addition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fit_lrd</td>
+<td>Unpenalized direct GLS; three correlations; iterative rho</td>
+<td>Baseline data contract; valid covariance; consistent weight/row handling; explicit propensity policy.</td>
+</tr>
+<tr class="even">
+<td>fit_alrd</td>
+<td>Two-stage fitting; lasso; ITE refit</td>
+<td>Separate nuisance/basis controls; full-pipeline validation; convergence diagnostics.</td>
+</tr>
+<tr class="odd">
+<td>estimate_ps</td>
+<td>Logistic fit with probability clipping</td>
+<td>Subject-level workflow; raw scores, clipping counts, overlap/balance diagnostics, convergence checks.</td>
+</tr>
+<tr class="even">
+<td>working_covariance</td>
+<td>Named subject correlation matrices</td>
+<td>Domain/positive-definiteness checks; row/time labels; clearly documented time units.</td>
+</tr>
+<tr class="odd">
+<td>predict_ite</td>
+<td>Training/new-data contrast evaluation</td>
+<td>Stable factor encoding and output row count; tested new-data schema.</td>
+</tr>
+<tr class="even">
+<td>simulate_alrd_data</td>
+<td>Five scenarios, known ITE/main effect/propensity</td>
+<td>Strict argument checks; unbalanced visits and explicit error-correlation controls; verified paper mapping.</td>
+</tr>
+<tr class="odd">
+<td>print methods</td>
+<td>Brief fit display</td>
+<td>summary and plot methods with structured diagnostics, without inventing inferential quantities.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="collaborator-tasks-aligned-with-the-reference-paper">Collaborator tasks aligned with the reference paper</h2>
+<p>Assignments below are proposals for team agreement, not messages sent to collaborators. The advisor’s suggested writing division is preserved: Zhikuan leads Sections 1-2; Steven leads Sections 3 onward. Software work crosses that division when methods and implementation must agree.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID / priority</th>
+<th>Owner / reviewer</th>
+<th>Specific deliverable</th>
+<th>Completion criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>M01 / first</td>
+<td>Zhikuan / Shuai</td>
+<td>Section 2 specification: estimand, timing, confounders, two losses, weight placement, admissible V, and exact ALRD theorem conditions</td>
+<td>Every equation mapped to code and method-paper source; limitations and model classes stated.</td>
+</tr>
+<tr class="even">
+<td>E01 / P1</td>
+<td>Steven / Zhikuan</td>
+<td>Input validation, factor prediction, row mapping, and rank policy</td>
+<td>Audit failures become regression tests that pass; numeric predictions stay consistent.</td>
+</tr>
+<tr class="odd">
+<td>E02 / P1</td>
+<td>Zhikuan / Steven</td>
+<td>Weight and covariance specification plus implementation</td>
+<td>Direct GLS oracle agrees; invalid rho/time combinations reject clearly; zero-weight semantics tested.</td>
+</tr>
+<tr class="even">
+<td>E03 / P1</td>
+<td>Steven / Zhikuan</td>
+<td>Baseline propensity workflow and explicit ps policy</td>
+<td>Unequal visit counts do not change subject-level propensity fitting; treatment changes reject clearly.</td>
+</tr>
+<tr class="odd">
+<td>V01 / P1</td>
+<td>Steven / Zhikuan and Shuai</td>
+<td>Full-pipeline subject resampling</td>
+<td>No test outcome enters any training-stage estimate; all nuisance fitting and tuning recorded by split.</td>
+</tr>
+<tr class="even">
+<td>E04 / P2</td>
+<td>Steven / Zhikuan</td>
+<td>Tuning controls, intercept identity, selected-variable mapping</td>
+<td>Separate stage settings work; folds and lambda policy documented; intercept edge cases tested.</td>
+</tr>
+<tr class="odd">
+<td>W01 / P2</td>
+<td>Steven / Shuai</td>
+<td>Section 3 diagnostics: overlap, convergence, ITE plots, summary methods</td>
+<td>One complete example uses exported functions and reports relevant diagnostics.</td>
+</tr>
+<tr class="even">
+<td>W02 / P2</td>
+<td>Steven / Zhikuan</td>
+<td>Out-of-sample subgroup/policy evaluation for longitudinal outcomes</td>
+<td>Scientific target, time aggregation, subject weighting and uncertainty method approved before implementation.</td>
+</tr>
+<tr class="odd">
+<td>D01 / now</td>
+<td>Steven / Zhikuan</td>
+<td>Adopt and maintain new function help and executable vignette</td>
+<td>All examples execute against the installed package; arguments and return fields match implementation.</td>
+</tr>
+<tr class="even">
+<td>S01 / after M01, V01</td>
+<td>Steven / Zhikuan and Shuai</td>
+<td>Section 4 simulation protocol and comparator adapters</td>
+<td>Same data/splits and fair tuning; replicate-level output, failures, timing and Monte Carlo uncertainty retained.</td>
+</tr>
+<tr class="odd">
+<td>A01 / after W01, W02</td>
+<td>Steven / Shuai</td>
+<td>Section 5 application protocol and reproducible data preparation</td>
+<td>Dataset/permissions agreed; missingness, baseline confounding and external evaluation addressed.</td>
+</tr>
+<tr class="even">
+<td>R01 / before release</td>
+<td>Steven / all</td>
+<td>Release/replication bundle, CI, package metadata and installation docs</td>
+<td>Clean package checks plus substantive audit fixes; fresh environment reproduces examples and manuscript results.</td>
+</tr>
+<tr class="odd">
+<td>M02 / after evidence</td>
+<td>Zhikuan: Sections 1-2; Steven: 3-6 / Shuai</td>
+<td>Final manuscript with supported claims</td>
+<td>Narrative, code outputs and frozen release agree; no unsupported superiority or robustness statements.</td>
+</tr>
+</tbody>
+</table>
+<p>Suggested sequence: agree M01 and the application target first; complete E01-E03 and V01 before final simulation runs; then E04/W01/W02 and D01; finally S01, A01, R01 and M02. Hold joint-model, multi-category-treatment and new outcome-family extensions until the core baseline-treatment release meets these criteria.</p>
+<h2 id="documentation-delivered-in-this-review">Documentation delivered in this review</h2>
+<p>All six exported function help pages now define parameters, return values, examples, coding conventions, and known limitations. A package overview and shared print-method topic were added. The introductory vignette was rewritten with baseline treatment, subject holdout, both fitting paths, lasso, covariance inspection, ITE trajectory prediction, and baseline propensity mapping.</p>
+<p>The usage guide now uses the actual simulator column <code>propensity</code> (previously incorrectly <code>ps</code>) and the actual nested <code>rho_estimation</code> fields. AR(1) uses actual time gaps; supplied rho can be estimated when explicitly requested; the lasso applies to both stages. New-data and validation limitations are explicit.</p>
+<p>The browsable manual is generated by <code>scripts/build_help.R</code> into <code>output/help/</code>. Help examples are executable, and the rendered vignette contains real generated output. R source edits in the six existing function files are documentation comments only; estimator bodies have not been altered by this review.</p>
+<p>Build exclusions were added for local agent instructions, manuscript, output, scratch files, and development scripts. Scripts remain in the repository and must be included separately in the JSS replication bundle where appropriate.</p>
+<h2 id="manuscript-and-repository-follow-up">Manuscript and repository follow-up</h2>
+<p>The earlier manuscript needs the same corrections before circulation: AR(1) uses actual time differences, complete-case data are required rather than automatically selected, and clustered glmnet folds do not constitute complete two-stage validation. Its robustness paragraph needs the actual method-paper citation and conditions. This task did not regenerate that PDF.</p>
+<p>Existing onboarding documents still contain placeholder GitHub URLs. Resolve those in a later repository-wide documentation pass after the approved local workflow is established. Paper authorship does not automatically establish package contributor roles; confirm DESCRIPTION credits separately.</p>
+</body>
+</html>

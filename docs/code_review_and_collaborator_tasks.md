@@ -101,7 +101,7 @@ exclusion or retained rows with zero contribution; preserve a row map and
 consistent outputs under that decision.
 
 `.default_rho()` checks only a generic interval, while exchangeable correlation
-also requires rho > -1/(m-1) for every subject. The residual updater clamps to
+also requires $\rho > -1/(m-1)$ for every subject. The residual updater clamps to
 [-0.95, 0.95], which does not ensure that condition. `.correlation_matrix()`
 allows duplicate AR(1) times and negative rho with fractional lags. Validate
 finite times, unique subject-time pairs, positive definiteness, and admissible
@@ -109,10 +109,22 @@ rho before solving; constrain iterative updates to the same valid domain.
 
 ### P1: Specify weights before extending the statistical claims
 
-In `.fit_gls()` and `.transform_gls()`, C = chol(V inverse) is applied first,
-then sqrt(W). The quadratic form is e' C' W C e. It equals the intended scalar
-subject-weighted form when W is constant within subject. It does not generally
-equal e' sqrt(W) V inverse sqrt(W) e. Neither arbitrary-row-weight extension
+In `.fit_gls()` and `.transform_gls()`, the Cholesky factor $C$, satisfying
+$C^{\mathsf{T}}C = V^{-1}$, is applied first, then $W^{1/2}$.
+The quadratic form is
+
+$$
+\mathbf{e}^{\mathsf{T}} C^{\mathsf{T}} W C \mathbf{e}.
+$$
+
+It equals the intended scalar subject-weighted form when $W$ is constant
+within subject. It does not generally equal
+
+$$
+\mathbf{e}^{\mathsf{T}} W^{1/2} V^{-1} W^{1/2} \mathbf{e}.
+$$
+
+Neither arbitrary-row-weight extension
 should be called correct without a defined estimand and loss.
 
 For the first release, consider requiring subject-constant propensity and

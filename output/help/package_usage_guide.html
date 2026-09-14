@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>package_usage_guide</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="R.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">package_usage_guide</h1>
+</header>
+<h1 id="alrd-package-usage-guide">ALRD package usage guide</h1>
+<p>See the rendered tutorial and function reference in <code>output/help/</code> after running <code>Rscript scripts/build_help.R</code>. This Markdown guide mirrors the executable vignette; the vignette is the source for generated outputs.</p>
+<h2 id="purpose-and-installation">Purpose and installation</h2>
+<p>ALRD estimates a treated-minus-control conditional mean contrast from continuous repeated outcomes. LRD directly models the contrast; ALRD first models a main effect and then fits the residualized response. Positive ITE favors treatment only when larger outcomes are preferred. The intended design has independent subjects and one baseline treatment per subject. This development version does not implement treatment switching, survival outcomes, or inferential intervals.</p>
+<p>With signed baseline treatment <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mo>−</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">T_i \in \{-1,1\}</annotation></semantics></math>, the outcome model is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mfrac><msub><mi>T</mi><mi>i</mi></msub><mn>2</mn></mfrac><mi>δ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
+</annotation></semantics></math></p>
+<p>Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(X_{ij})</annotation></semantics></math> is the main effect, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\delta(X_{ij})</annotation></semantics></math> is the full treated-minus-control contrast, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\varepsilon_{ij}</annotation></semantics></math> is the outcome error.</p>
+<p>Install the evaluated local source:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;/Users/zhikuan_quan/Documents/ALRD&quot;</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>                 <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;glmnet&quot;</span>)</span></code></pre></div>
+<p>The lasso option requires glmnet. This is not a claim of CRAN availability. Use <code>help(package = "ALRD")</code>, <code>?fit_alrd</code>, and the other function help pages.</p>
+<h2 id="prepare-and-check-long-format-data">Prepare and check long-format data</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;ALRD&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>dat &lt;-<span class="st"> </span><span class="kw">simulate_alrd_data</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">scenario =</span> <span class="dv">1</span>, <span class="dt">seed =</span> <span class="dv">2026</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">head</span>(dat[, <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;outcome&quot;</span>, <span class="st">&quot;propensity&quot;</span>)])</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>covs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>          <span class="st">&quot;time_z1&quot;</span>, <span class="st">&quot;time_z2&quot;</span>, <span class="st">&quot;time_z11&quot;</span>, <span class="st">&quot;time_z12&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>required &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;outcome&quot;</span>, covs)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">all</span>(<span class="kw">complete.cases</span>(dat[, required])),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>          <span class="op">!</span><span class="kw">anyDuplicated</span>(dat[, <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>)]),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>          <span class="kw">all</span>(<span class="kw">vapply</span>(<span class="kw">split</span>(dat<span class="op">$</span>treatment, dat<span class="op">$</span>id),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>                     <span class="cf">function</span>(x) <span class="kw">length</span>(<span class="kw">unique</span>(x)) <span class="op">==</span><span class="st"> </span>1L, <span class="kw">logical</span>(<span class="dv">1</span>))))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">all</span>(<span class="kw">vapply</span>(dat[, <span class="kw">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;outcome&quot;</span>, covs)],</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>                     <span class="cf">function</span>(x) <span class="kw">is.numeric</span>(x) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">all</span>(<span class="kw">is.finite</span>(x)), <span class="kw">logical</span>(<span class="dv">1</span>))))</span></code></pre></div>
+<p>Treatment is assigned once per subject in this simulator. Numeric -1/1 or 0/1 coding is recommended. For factor treatment the second level is treated; for character treatment the alphabetically second value is treated.</p>
+<p>List existing columns in <code>covariates</code>; an intercept is added automatically. Precompute interactions such as <code>time_z1 = time * z1</code>. Both ALRD stages share the same basis. This compact example omits other prognostic variables in the simulator. The simulator’s <code>correlated</code> option concerns baseline covariates; outcome errors always include a random intercept with conditional correlation 0.5.</p>
+<h2 id="hold-out-subjects-before-fitting">Hold out subjects before fitting</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>training_ids &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(dat<span class="op">$</span>id), <span class="dv">75</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>train &lt;-<span class="st"> </span>dat[dat<span class="op">$</span>id <span class="op">%in%</span><span class="st"> </span>training_ids, ]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>test &lt;-<span class="st"> </span>dat[<span class="op">!</span>dat<span class="op">$</span>id <span class="op">%in%</span><span class="st"> </span>training_ids, ]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">length</span>(<span class="kw">intersect</span>(train<span class="op">$</span>id, test<span class="op">$</span>id)) <span class="op">==</span><span class="st"> </span>0L)</span></code></pre></div>
+<p>Keep all visits from each subject together. Fit nuisance models and tune models using only training subjects. Reserve the test sample for evaluation.</p>
+<h2 id="fit-lrd-and-alrd">Fit LRD and ALRD</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>lrd &lt;-<span class="st"> </span><span class="kw">fit_lrd</span>(train, id, time, treatment, outcome, covs, <span class="dt">ps =</span> <span class="fl">0.5</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>               <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>alrd &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(train, id, time, treatment, outcome, covs, <span class="dt">ps =</span> <span class="fl">0.5</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>                 <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="kw">print</span>(lrd)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="kw">print</span>(alrd)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="kw">head</span>(alrd<span class="op">$</span>coefficients)</span></code></pre></div>
+<p>Supply the known treatment probability explicitly for randomized studies. With <code>ps = NULL</code>, LRD assumes 0.5, whereas ALRD estimates a logistic model from all long-data rows using the outcome covariates.</p>
+<p>The coefficients describe the ITE basis. However, <code>fitted.values</code> is the treatment contribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>, not the ITE or full outcome. For ALRD, the full fitted outcome also includes <code>main_effect</code>. Obtain contrasts using <code>predict_ite()</code>.</p>
+<h2 id="covariance-and-convergence">Covariance and convergence</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>matrices &lt;-<span class="st"> </span><span class="kw">working_covariance</span>(train, id, time, <span class="st">&quot;ar1&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>matrices[[<span class="dv">1</span>]]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">all</span>(<span class="kw">vapply</span>(matrices, <span class="cf">function</span>(v) {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>  <span class="kw">min</span>(<span class="kw">eigen</span>(v, <span class="dt">symmetric =</span> <span class="ot">TRUE</span>, <span class="dt">only.values =</span> <span class="ot">TRUE</span>)<span class="op">$</span>values) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>}, <span class="kw">logical</span>(<span class="dv">1</span>))))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>estimated &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(train, id, time, treatment, outcome, covs,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>                      <span class="dt">ps =</span> <span class="fl">0.5</span>, <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>estimated<span class="op">$</span>rho_estimation</span></code></pre></div>
+<p>Matrices have unit diagonal and ascending time order within each subject. AR(1) uses actual numeric time differences, not visit positions. For visits <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> of subject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, its entries are</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>i</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><msup><mi>ρ</mi><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo></mrow></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+(V_i)_{jk} = \rho^{|t_{ij}-t_{ik}|}.
+</annotation></semantics></math></p>
+<p>Omitting rho triggers estimation for non-independence models. Supplied rho is fixed by default; <code>estimate_rho = TRUE</code> instead uses it as a starting value. Inspect <code>converged</code>: reaching the iteration limit does not issue a warning.</p>
+<h2 id="lasso-and-selected-terms">Lasso and selected terms</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="cf">if</span> (<span class="kw">requireNamespace</span>(<span class="st">&quot;glmnet&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  sparse &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(train, id, time, treatment, outcome, covs, <span class="dt">ps =</span> <span class="fl">0.5</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>                     <span class="dt">penalty =</span> <span class="st">&quot;lasso&quot;</span>, <span class="dt">refit =</span> <span class="ot">TRUE</span>, <span class="dt">nfolds =</span> <span class="dv">3</span>, <span class="dt">seed =</span> <span class="dv">7</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>                     <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>  <span class="kw">print</span>(sparse)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>  <span class="kw">print</span>(sparse<span class="op">$</span>selected_terms)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>  <span class="kw">print</span>(<span class="kw">c</span>(<span class="dt">lambda_min =</span> sparse<span class="op">$</span>lambda, <span class="dt">lambda_1se =</span> sparse<span class="op">$</span>lambda_1se))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>}</span></code></pre></div>
+<p>Both stages use lasso and select their own <code>lambda.min</code>. Only the ITE stage is refitted without penalty. <code>lambda_1se</code> is stored but not used for selection. Selected terms are design columns, including possibly the intercept and factor contrasts, not necessarily distinct clinical variables.</p>
+<p>Subject folds keep repeated rows together inside each glmnet call. However, main-effect residualization, internally estimated propensity scores, and working correlation use the full fitting sample before ITE-stage validation. Consequently, this CV curve does not validate the entire procedure. Use external test subjects and plan full-pipeline subject resampling before publication.</p>
+<h2 id="predictions-and-evaluation">Predictions and evaluation</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>prediction &lt;-<span class="st"> </span><span class="kw">predict_ite</span>(alrd, test)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">length</span>(prediction) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(test), <span class="kw">all</span>(<span class="kw">is.finite</span>(prediction)))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>subject_mse &lt;-<span class="st"> </span><span class="kw">tapply</span>((prediction <span class="op">-</span><span class="st"> </span>test<span class="op">$</span>true_ite)<span class="op">^</span><span class="dv">2</span>, test<span class="op">$</span>id, mean)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>subject_agreement &lt;-<span class="st"> </span><span class="kw">tapply</span>((prediction <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">==</span><span class="st"> </span>(test<span class="op">$</span>true_ite <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>), test<span class="op">$</span>id, mean)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="kw">data.frame</span>(<span class="dt">metric =</span> <span class="kw">c</span>(<span class="st">&quot;Mean subject trajectory MSE&quot;</span>, <span class="st">&quot;Mean subject sign agreement&quot;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>            <span class="dt">value =</span> <span class="kw">c</span>(<span class="kw">mean</span>(subject_mse), <span class="kw">mean</span>(subject_agreement)))</span></code></pre></div>
+<p>These explicitly defined demonstration metrics do not replace the definitions in the existing simulation scripts. True ITE is known only in simulation. This single split is a usage example, not evidence of superiority or validated subgroup effects. Real-data evaluation requires an appropriate observable policy-value or subgroup-effect estimator.</p>
+<p>Predict one fixed covariate profile over time, recomputing all interactions:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>profile &lt;-<span class="st"> </span>test[<span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">5</span>), covs, drop =<span class="st"> </span><span class="ot">FALSE</span>]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>profile<span class="op">$</span>time &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="cf">for</span> (nm <span class="cf">in</span> <span class="kw">c</span>(<span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>)) {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>  profile[[<span class="kw">paste0</span>(<span class="st">&quot;time_&quot;</span>, nm)]] &lt;-<span class="st"> </span>profile<span class="op">$</span>time <span class="op">*</span><span class="st"> </span>profile[[nm]]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>}</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>trajectory &lt;-<span class="st"> </span><span class="kw">predict_ite</span>(alrd, profile)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="kw">plot</span>(profile<span class="op">$</span>time, trajectory, <span class="dt">type =</span> <span class="st">&quot;b&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;Time&quot;</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Estimated treated-minus-control contrast&quot;</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>)</span></code></pre></div>
+<p>A time-dependent contrast under baseline treatment does not establish that switching treatment at a particular visit would improve outcomes.</p>
+<h2 id="observational-baseline-assignment">Observational baseline assignment</h2>
+<p>Fit the propensity model on one row per subject with pre-treatment confounders and map scores to visits. For an external evaluation, fit this model on training subjects only and predict for held-out subjects.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>obs &lt;-<span class="st"> </span><span class="kw">simulate_alrd_data</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">scenario =</span> <span class="dv">3</span>, <span class="dt">seed =</span> <span class="dv">15</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>baseline &lt;-<span class="st"> </span>obs[<span class="op">!</span><span class="kw">duplicated</span>(obs<span class="op">$</span>id), ]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>ps_fit &lt;-<span class="st"> </span><span class="kw">estimate_ps</span>(baseline, treatment, <span class="kw">c</span>(<span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>ps_rows &lt;-<span class="st"> </span>ps_fit<span class="op">$</span>scores[<span class="kw">match</span>(obs<span class="op">$</span>id, baseline<span class="op">$</span>id)]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">length</span>(ps_rows) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(obs), <span class="kw">all</span>(ps_rows <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ps_rows <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a><span class="kw">tapply</span>(ps_fit<span class="op">$</span>scores, baseline<span class="op">$</span>treatment, range)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>obs_fit &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(obs, id, time, treatment, outcome, covs, <span class="dt">ps =</span> ps_rows,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>                    <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">predict_ite</span>(obs_fit))</span></code></pre></div>
+<p>This last example demonstrates fitting only. Clipping does not establish overlap; inspect unclipped probabilities and covariate balance before analysis. Do not include post-treatment variables in a baseline assignment model.</p>
+<h2 id="data-dictionary-and-function-selection">Data dictionary and function selection</h2>
+<p>Use one row per subject and visit. Column names are configurable in fitting calls; the names below are those used by the running example.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Meaning</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>id</code></td>
+<td>Independent subject identifier</td>
+<td>Nonmissing; repeats across that subject’s visits.</td>
+</tr>
+<tr class="even">
+<td><code>time</code></td>
+<td>Measurement time</td>
+<td>Finite numeric values; distinct within subject for AR(1). Units determine rho interpretation.</td>
+</tr>
+<tr class="odd">
+<td><code>treatment</code></td>
+<td>Baseline treatment arm</td>
+<td>Constant within subject; prefer numeric -1/1 or 0/1.</td>
+</tr>
+<tr class="even">
+<td><code>outcome</code></td>
+<td>Observed repeated response</td>
+<td>Complete, finite, continuous numeric values.</td>
+</tr>
+<tr class="odd">
+<td>Covariate columns</td>
+<td>Prognostic/moderator basis</td>
+<td>Complete values; construct interactions before fitting.</td>
+</tr>
+<tr class="even">
+<td>Supplied <code>ps</code></td>
+<td>Probability of the treated arm</td>
+<td>Scalar or one value per data row; strictly between 0 and 1.</td>
+</tr>
+<tr class="odd">
+<td>Supplied <code>weights</code></td>
+<td>Additional analysis weights</td>
+<td>Use positive values constant within subject for the documented loss.</td>
+</tr>
+</tbody>
+</table>
+<p>The simulator’s <code>true_main</code>, <code>true_ite</code>, and <code>propensity</code> are known generating quantities. Do not use truth columns as predictors in a performance comparison. Numeric covariate columns are the most reliable current prediction interface; factor encoding needs particular care as described in <code>?predict_ite</code>.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Function</th>
+<th>Main result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Create a reproducible example</td>
+<td><code>simulate_alrd_data()</code></td>
+<td>Long-format data with known generating quantities.</td>
+</tr>
+<tr class="even">
+<td>Estimate baseline assignment</td>
+<td><code>estimate_ps()</code></td>
+<td>Logistic model and clipped treated-arm scores.</td>
+</tr>
+<tr class="odd">
+<td>Inspect within-subject correlation</td>
+<td><code>working_covariance()</code></td>
+<td>Named list of correlation matrices.</td>
+</tr>
+<tr class="even">
+<td>Fit direct learning without augmentation</td>
+<td><code>fit_lrd()</code></td>
+<td>Unpenalized <code>lrd_fit</code> object.</td>
+</tr>
+<tr class="odd">
+<td>Fit augmented learning, optionally sparse</td>
+<td><code>fit_alrd()</code></td>
+<td><code>alrd_fit</code> with both stage results.</td>
+</tr>
+<tr class="even">
+<td>Obtain contrasts for a new covariate profile</td>
+<td><code>predict_ite()</code></td>
+<td>Numeric treated-minus-control contrasts.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fitted-object-reference">Fitted-object reference</h2>
+<p>Both fitting functions accept bare column names or strings for the data-role arguments. For programmatic calls, strings make the mapping explicit. <code>covariates</code> is always a character vector of existing column names.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>coefficients</code></td>
+<td>ITE coefficients; names have an <code>ite_</code> prefix. ALRD lasso coefficients may be post-selection refitted.</td>
+</tr>
+<tr class="even">
+<td><code>fitted.values</code></td>
+<td>Treatment contribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>, not the full ITE.</td>
+</tr>
+<tr class="odd">
+<td><code>residuals</code></td>
+<td>Outcome minus the fitted contribution; ALRD also subtracts the main effect.</td>
+</tr>
+<tr class="even">
+<td><code>main_effect</code>, <code>main_model</code></td>
+<td>ALRD-only first-stage predictions and fitted model.</td>
+</tr>
+<tr class="odd">
+<td><code>propensity_scores</code></td>
+<td>Probabilities of the treated arm in input-row order.</td>
+</tr>
+<tr class="even">
+<td><code>propensity_for_received</code></td>
+<td>Treated probability for treated subjects, its complement for controls.</td>
+</tr>
+<tr class="odd">
+<td><code>rho_estimation</code></td>
+<td>List with <code>estimated</code>, <code>history</code>, <code>converged</code>, <code>iterations</code>, and <code>tolerance</code>.</td>
+</tr>
+<tr class="even">
+<td><code>selected_terms</code></td>
+<td>ALRD’s ITE design-column names; all columns for unpenalized fits.</td>
+</tr>
+<tr class="odd">
+<td><code>lambda</code>, <code>lambda_1se</code></td>
+<td>Lasso-only tuning summaries. The fit uses lambda.min.</td>
+</tr>
+<tr class="even">
+<td><code>lasso_coefficients</code>, <code>refit_model</code></td>
+<td>Lasso-only penalized coefficients and optional unpenalized refit.</td>
+</tr>
+<tr class="odd">
+<td><code>cv_model</code></td>
+<td>Lasso-only ITE-stage cv.glmnet object; first-stage tuning is in <code>main_model</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><code>print(fit)</code> reports the fit configuration. There are currently no dedicated <code>summary()</code>, <code>confint()</code>, or model <code>plot()</code> methods; use documented components and <code>predict_ite()</code> rather than interpreting a generic list summary as inference.</p>
+<h2 id="current-limitations">Current limitations</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue</th>
+<th>Action for this version</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Missing fitting values</td>
+<td>Fitting rejects them; justify a missing-data strategy first.</td>
+</tr>
+<tr class="even">
+<td>Missing prediction values</td>
+<td>Rows may be silently dropped; check completeness and output length.</td>
+</tr>
+<tr class="odd">
+<td>Reordered or novel factor levels</td>
+<td>Use a consistently prepared numeric basis until factor encoding is fixed.</td>
+</tr>
+<tr class="even">
+<td>Collinear columns</td>
+<td>NA coefficients may propagate to all predictions; check model-matrix rank.</td>
+</tr>
+<tr class="odd">
+<td>Zero weights</td>
+<td>Residual length can disagree with metadata; avoid until fixed.</td>
+</tr>
+<tr class="even">
+<td>Within-subject varying weights</td>
+<td>Their loss differs from scalar subject weighting; use positive subject-constant weights.</td>
+</tr>
+<tr class="odd">
+<td>Invalid covariance</td>
+<td>Out-of-range exchangeable rho and duplicate AR(1) times are now rejected explicitly.</td>
+</tr>
+<tr class="even">
+<td>Fractional times</td>
+<td>Use nonnegative rho for AR(1); negative rho with fractional gaps is rejected.</td>
+</tr>
+<tr class="odd">
+<td>Two folds</td>
+<td>Use at least three subjects and three folds.</td>
+</tr>
+<tr class="even">
+<td>Inference</td>
+<td>Dedicated standard errors, intervals, and subgroup validation are absent.</td>
+</tr>
+</tbody>
+</table>
+<p>For troubleshooting retain the call, data dimensions, treatment coding, propensity range, visit times, and convergence history.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+</body>
+</html>

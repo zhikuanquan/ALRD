@@ -27,12 +27,12 @@ Data*. The package directly estimates time-specific individualized treatment
 effects (ITEs) from repeated outcome measurements while accounting for
 within-subject correlation.
 
-The paper writes treatment as `T = 1` for treatment and `T = -1` for control and
+The paper writes treatment as $T_i = 1$ for treatment and $T_i = -1$ for control and
 uses the decomposition
 
-```text
-Y_ij = m(X_ij) + T_i * delta(X_ij) / 2 + error_ij.
-```
+$$
+Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
+$$
 
 This package accepts treatment coded as either `-1/1` or `0/1`; internally the
 learning objective is fit on the `-1/1` scale.
@@ -42,16 +42,22 @@ learning objective is fit on the `-1/1` scale.
 `fit_lrd()` fits LRD-Learning by minimizing the inverse-propensity weighted
 longitudinal loss
 
-```text
-sum_i 1 / pi_T(Z_i) * {Y_i - T_i f(X_i) / 2}' V_i^{-1}
-  {Y_i - T_i f(X_i) / 2}.
-```
+$$
+\sum_{i=1}^{n} \frac{1}{\pi_{T_i}(Z_i)}
+\left\{\mathbf{Y}_i - \frac{T_i}{2}\mathbf{f}(\mathbf{X}_i)\right\}^{\mathsf{T}}
+V_i^{-1}
+\left\{\mathbf{Y}_i - \frac{T_i}{2}\mathbf{f}(\mathbf{X}_i)\right\}.
+$$
+
+Here $\pi_{T_i}(Z_i)$ is the probability of the treatment received,
+$V_i$ is the working correlation matrix, and bold symbols collect a
+subject's repeated measurements.
 
 `fit_alrd()` fits ALRD-Learning with the paper's two-stage augmentation:
 
-1. Estimate the main effect `m(X)` from the weighted working covariance loss.
-2. Estimate the ITE from the augmented outcome `Y - mhat(X)` using
-   `T * f(X) / 2`.
+1. Estimate the main effect $m(X)$ from the weighted working covariance loss.
+2. Estimate the ITE from the augmented outcome $Y_{ij} - \widehat{m}(X_{ij})$
+   using $T_i f(X_{ij})/2$.
 
 For `fit_alrd()`, use `penalty = "none"` for the non-penalized version and
 `penalty = "lasso"` for lasso variable selection. The lasso version uses

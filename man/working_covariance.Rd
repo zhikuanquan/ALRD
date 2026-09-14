@@ -37,12 +37,14 @@ marginal variance model.
 }
 \details{
 Independence returns an identity matrix. Exchangeable correlation has
-off-diagonal entries rho. For a subject with m > 1 measurements, positive
-definiteness requires rho > -1 / (m - 1), in addition to rho < 1.
+off-diagonal entries \eqn{\rho}{rho}. For a subject with \eqn{m > 1}{m > 1} measurements, positive
+definiteness requires \eqn{-1/(m-1) < \rho < 1}{-1/(m-1) < rho < 1}.
 Invalid values are rejected. Iterative exchangeable updates in the fitting
 functions stay above the lower bound for the largest subject block.
 
-AR(1) entry (j, k) is \code{rho^abs(time[j] - time[k])}, using actual numeric time
+The AR(1) entries are
+\deqn{(V_i)_{jk} = \rho^{|t_{ij}-t_{ik}|}.}{V_i[j, k] = rho^abs(time[j] - time[k]).}
+This uses actual numeric time
 gaps rather than visit positions. Use positive rho with fractional times:
 negative rho with fractional gaps and repeated AR(1) times are rejected.
 AR(1) matrices are checked for numerical positive definiteness. Numeric

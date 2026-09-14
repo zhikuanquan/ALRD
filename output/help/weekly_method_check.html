@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>weekly_method_check</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="R.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">weekly_method_check</h1>
+</header>
+<h1 id="weekly-alrd-update-professional-package-documentation">Weekly ALRD update: Professional package documentation</h1>
+<p>Date: September 13, 2026. Work completed in Documents/ALRD.</p>
+<h2 id="this-weeks-main-deliverable">This week’s main deliverable</h2>
+<p>Produce one coherent package help system: an overview, complete help for all six exported functions and the print methods, and one executable introduction that takes a new user from installation to fitting and interpreting predictions. The earlier method check is supporting work for documentation accuracy.</p>
+<p><strong>Zhikuan:</strong> verify the methodological explanations, data requirements, treatment/propensity conventions, covariance definitions, return-value meanings, and stated limitations. These checks and an initial documentation draft are complete; review Steven’s revisions for consistency with the implementation.</p>
+<p><strong>Steven:</strong> complete an editorial pass on the function help and introductory vignette. Improve unclear argument descriptions and example explanations, add missing user-facing details, and run the examples. Deliver the revised roxygen comments and vignette plus a short list of unresolved questions. Work in Documents/ALRD and regenerate the Rd pages rather than editing them directly.</p>
+<p><strong>Definition of done:</strong> every public function has a clear purpose, full argument descriptions/defaults, structured return values, runnable examples, related-help links and relevant limitations; the tutorial runs from start to finish; installed help, examples and vignette pass package checks. No new statistical features or large simulation runs are assigned this week. Shuai may monitor and advise; she has no assigned deliverable.</p>
+<h2 id="what-i-checked">What I checked</h2>
+<p>The documentation draft now includes all six function references, package and print-method help, a data dictionary, a function-selection guide, a fitted-object reference, randomized and observational examples, lasso, prediction, and troubleshooting. The executable vignette generates the readable tutorial; roxygen comments generate installed R help and the browsable reference. Open <code>output/help/index.html</code> to review the complete help system.</p>
+<p>The following method checks were completed to support accurate help text.</p>
+<p>I compared the implementation with the 23-page local manuscript by Quan, Iosif, and Chen, <em>Doubly Robust Estimation of Individualized Treatment Effects in Longitudinal Data</em> (2026 draft). Source file: <code>/Users/zhikuan_quan/Downloads/Doubly_Robust_Estimation_of_Individualized_Treatment_Effects_in_Longitudinal_Data.pdf</code>. It has placeholder publication metadata and is not treated as a published paper. The older 19-page version has different equation numbering. Huling and Yu’s JSS paper remains the reference for software presentation and workflow.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Checklist item</th>
+<th>Manuscript location</th>
+<th>Code and conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Target and treatment coding</td>
+<td>Section 2.1, pp. 3-4, Eq. (1)</td>
+<td><code>fit_lrd()</code>, <code>fit_alrd()</code>, <code>predict_ite()</code>: the design uses signed T times the basis divided by 2, and predictions return the full treated-minus-control contrast. Numeric 0/1 and -1/1 give the same fitted coefficients in the new tests. Baseline treatment constancy is assumed but not yet enforced.</td>
+</tr>
+<tr class="even">
+<td>Direct and augmented losses</td>
+<td>pp. 5-6, Eqs. (3), (5), (6)</td>
+<td>The unpenalized LRD fit and both ALRD stages match independent matrix GLS calculations for fixed covariance and positive subject-constant weights. Omitting the common 1/n factor does not change these unpenalized minimizers.</td>
+</tr>
+<tr class="odd">
+<td>Main-effect versus ITE basis</td>
+<td>Section 2.3, p. 6</td>
+<td>The paper permits separate classes G and F. The package uses one basis for both: a supported restriction, not the full framework.</td>
+</tr>
+<tr class="even">
+<td>Propensity weighting</td>
+<td>Section 2.1, p. 4; Section 2.5, p. 9</td>
+<td>The code correctly uses p for treated subjects and 1-p for controls. <code>ps = NULL</code> assumes 0.5 in LRD but estimates scores from long-data outcome covariates in ALRD. Use explicit design probabilities, or baseline subject-level scores mapped to visits. Arbitrary visit-varying weights are not covered by the paper’s scalar subject-weighted loss.</td>
+</tr>
+<tr class="odd">
+<td>Working covariance</td>
+<td>Section 2.2, p. 5; Section 2.5, p. 9</td>
+<td>Actual numeric time gaps agree with the manuscript. Cholesky whitening reproduces fixed-covariance GLS. Unit-diagonal working correlation is narrower than a full variance model. The package’s residual-based rho updates differ from the EM-type approach discussed in the paper.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-i-updated">What I updated</h2>
+<p>I selected one bounded implementation task: covariance validity. The package now rejects non-finite/non-numeric times, exchangeable rho at or below <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">-1/(m-1)</annotation></semantics></math>, duplicate AR(1) times, and negative AR(1) rho with fractional gaps. AR(1) matrices are checked for numerical positive definiteness. Estimated exchangeable rho respects the largest subject’s lower bound, and fractional-gap AR(1) estimation searches a nonnegative interval. Help pages and the user guide were updated accordingly.</p>
+<p>The regression tests also check valid positive and negative correlations, unequal visit counts, both numeric treatment codings, inverse received-arm probabilities, and the LRD/main-effect/ITE matrix objectives. This checks the implementation; it is not a new simulation study or proof of consistency.</p>
+<h2 id="what-remains-unresolved">What remains unresolved</h2>
+<p>Theorem 2.1 (pp. 6-7) states population identification under the causal assumptions and a correct propensity or limiting main-effect function. It does not by itself validate finite-sample lasso, restricted/misspecified ITE bases, or the full CV pipeline. In particular, estimating the main effect by Eq. (5) with incorrect propensity weights need not recover m merely because the chosen basis contains m. This condition needs methodological clarification before a blanket double- robustness claim. No change to that estimator was made here.</p>
+<p>For example, with constant covariates, true <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.8</mn></mrow><annotation encoding="application/x-tex">p = 0.8</annotation></semantics></math>, supplied <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">p = 0.5</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">m = 0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\delta = 2</annotation></semantics></math>, the two population least-squares stages give</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>m</mi><mo accent="true">̂</mo></mover><mo>=</mo><mn>0.6</mn><mo>,</mo><mspace width="2.0em"></mspace><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mo>=</mo><mn>1.28</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\widehat{m} = 0.6, \qquad \widehat{\delta} = 1.28.
+</annotation></semantics></math></p>
+<p>This algebraic check concerns the nuisance estimator’s limit; it does not contradict the theorem’s premise that the limiting m is true.</p>
+<p>The lasso uses glmnet’s transformed-data scaling/standardization, so numerical lambda values should not be equated directly to Eq. (8) without a scaling derivation. The quadratic spline penalty in Eq. (9) is not implemented. Prediction factor/NA handling, zero weights, and full-pipeline resampling remain on the existing backlog. They are not additional assignments for this week.</p>
+<h2 id="stevens-documentation-review-checklist">Steven’s documentation review checklist</h2>
+<ol type="1">
+<li>Read each function’s help as a first-time user and revise unclear wording in the roxygen comments in R/. Check all arguments and returned components.</li>
+<li>Edit vignettes/alrd-introduction.Rmd so each example explains its inputs, choice of options, output and interpretation; verify installation instructions.</li>
+<li>Run <code>Rscript scripts/build_help.R</code>; inspect output/help/index.html and follow the tutorial. Record remaining issues with the exact call/message.</li>
+<li>Return the revised documentation to Zhikuan for a final methods review.</li>
+</ol>
+<h2 id="validation">Validation</h2>
+<p>The expanded documentation was regenerated and checked successfully. The latest <code>R CMD check --no-manual</code> finished with <strong>Status: OK</strong>, including examples and vignette rebuilding; local links resolve across all 11 generated HTML pages. Logs for this documentation pass are in <code>output/review/documentation-build.log</code>, <code>documentation-package-build.log</code>, and <code>documentation-check.log</code>.</p>
+<p>All 10 tests (53 expectations) passed. The executable guide and source build succeeded. <code>R CMD check --no-manual</code> finished with <strong>Status: OK</strong>, including installed examples, help-page checks, tests, and vignette rebuilding. Logs: <code>output/review/weekly-help-build.log</code>, <code>weekly-build.log</code>, and <code>weekly-check.log</code>. This was not an <code>--as-cran</code> check and did not rebuild a PDF reference manual. GitHub/ALRD was not modified. Synchronization requires separate approval.</p>
+</body>
+</html>

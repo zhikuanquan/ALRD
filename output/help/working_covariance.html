@@ -1,7 +1,7 @@
 <!DOCTYPE html><html><head><title>R: Build subject-specific working correlation matrices</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<link rel="stylesheet" href="katex/katex.css">
 <script type="text/javascript">
 const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
 function processMathHTML() {
@@ -9,7 +9,7 @@ function processMathHTML() {
     for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
     return;
 }</script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+<script defer src="katex/katex.js"
     onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body><div class="container"><main>
@@ -70,12 +70,17 @@ This inspection function does not estimate rho.</p>
 <h3>Details</h3>
 
 <p>Independence returns an identity matrix. Exchangeable correlation has
-off-diagonal entries rho. For a subject with m &gt; 1 measurements, positive
-definiteness requires rho &gt; -1 / (m - 1), in addition to rho &lt; 1.
+off-diagonal entries <code class="reqn">\rho</code>. For a subject with <code class="reqn">m &gt; 1</code> measurements, positive
+definiteness requires <code class="reqn">-1/(m-1) &lt; \rho &lt; 1</code>.
 Invalid values are rejected. Iterative exchangeable updates in the fitting
 functions stay above the lower bound for the largest subject block.
 </p>
-<p>AR(1) entry (j, k) is <code>rho^abs(time[j] - time[k])</code>, using actual numeric time
+<p>The AR(1) entries are
+</p>
+<p style="text-align: center;"><code class="reqn">(V_i)_{jk} = \rho^{|t_{ij}-t_{ik}|}.</code>
+</p>
+
+<p>This uses actual numeric time
 gaps rather than visit positions. Use positive rho with fractional times:
 negative rho with fractional gaps and repeated AR(1) times are rejected.
 AR(1) matrices are checked for numerical positive definiteness. Numeric

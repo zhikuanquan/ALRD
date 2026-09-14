@@ -14,6 +14,15 @@ only when larger outcomes are preferred. The intended design has independent
 subjects and one baseline treatment per subject. This development version does
 not implement treatment switching, survival outcomes, or inferential intervals.
 
+With signed baseline treatment $T_i \in \{-1,1\}$, the outcome model is
+
+$$
+Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
+$$
+
+Here $m(X_{ij})$ is the main effect, $\delta(X_{ij})$ is the full
+treated-minus-control contrast, and $\varepsilon_{ij}$ is the outcome error.
+
 Install the evaluated local source:
 
 ```r
@@ -82,7 +91,7 @@ With `ps = NULL`, LRD assumes 0.5, whereas ALRD estimates a logistic model
 from all long-data rows using the outcome covariates.
 
 The coefficients describe the ITE basis. However, `fitted.values` is the
-treatment contribution `T * estimated_ite / 2`, not the ITE or full outcome.
+treatment contribution $T_i\widehat{\delta}(X_{ij})/2$, not the ITE or full outcome.
 For ALRD, the full fitted outcome also includes `main_effect`.
 Obtain contrasts using `predict_ite()`.
 
@@ -101,6 +110,12 @@ estimated$rho_estimation
 
 Matrices have unit diagonal and ascending time order within each subject.
 AR(1) uses actual numeric time differences, not visit positions.
+For visits $j$ and $k$ of subject $i$, its entries are
+
+$$
+(V_i)_{jk} = \rho^{|t_{ij}-t_{ik}|}.
+$$
+
 Omitting rho triggers estimation for non-independence models. Supplied rho is
 fixed by default; `estimate_rho = TRUE` instead uses it as a starting value.
 Inspect `converged`: reaching the iteration limit does not issue a warning.
@@ -223,7 +238,7 @@ arguments. For programmatic calls, strings make the mapping explicit.
 | Component | Interpretation |
 |---|---|
 | `coefficients` | ITE coefficients; names have an `ite_` prefix. ALRD lasso coefficients may be post-selection refitted. |
-| `fitted.values` | Treatment contribution `T * estimated_ite / 2`, not the full ITE. |
+| `fitted.values` | Treatment contribution $T_i\widehat{\delta}(X_{ij})/2$, not the full ITE. |
 | `residuals` | Outcome minus the fitted contribution; ALRD also subtracts the main effect. |
 | `main_effect`, `main_model` | ALRD-only first-stage predictions and fitted model. |
 | `propensity_scores` | Probabilities of the treated arm in input-row order. |

@@ -343,6 +343,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="purpose-and-installation" class="section level2">
 <h2>Purpose and installation</h2>
 <p>ALRD estimates a treated-minus-control conditional mean contrast from continuous repeated outcomes. LRD directly models the contrast; ALRD first models a main effect and then fits the residualized response. Positive ITE favors treatment only when larger outcomes are preferred. The intended design has independent subjects and one baseline treatment per subject. This development version does not implement treatment switching, survival outcomes, or inferential intervals.</p>
+<p>With signed baseline treatment <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mo>−</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">T_i \in \{-1,1\}</annotation></semantics></math>, the outcome model is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mfrac><msub><mi>T</mi><mi>i</mi></msub><mn>2</mn></mfrac><mi>δ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
+</annotation></semantics></math></p>
+<p>Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(X_{ij})</annotation></semantics></math> is the main effect, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\delta(X_{ij})</annotation></semantics></math> is the full treated-minus-control contrast, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\varepsilon_{ij}</annotation></semantics></math> is the outcome error.</p>
 <p>Install the evaluated local source:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;/Users/zhikuan_quan/Documents/ALRD&quot;</span>,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>                 <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</span>
@@ -405,7 +410,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a><span class="co">#&gt;         ite_z12 </span></span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a><span class="co">#&gt;     -0.77459070</span></span></code></pre></div>
 <p>Supply the known treatment probability explicitly for randomized studies. With <code>ps = NULL</code>, LRD assumes 0.5, whereas ALRD estimates a logistic model from all long-data rows using the outcome covariates.</p>
-<p>The coefficients describe the ITE basis. However, <code>fitted.values</code> is the treatment contribution <code>T * estimated_ite / 2</code>, not the ITE or full outcome. For ALRD, the full fitted outcome also includes <code>main_effect</code>. Obtain contrasts using <code>predict_ite()</code>.</p>
+<p>The coefficients describe the ITE basis. However, <code>fitted.values</code> is the treatment contribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>, not the ITE or full outcome. For ALRD, the full fitted outcome also includes <code>main_effect</code>. Obtain contrasts using <code>predict_ite()</code>.</p>
 </div>
 <div id="covariance-and-convergence" class="section level2">
 <h2>Covariance and convergence</h2>
@@ -437,7 +442,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a><span class="co">#&gt; $tolerance</span></span>
 <span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a><span class="co">#&gt; [1] 0.001</span></span></code></pre></div>
-<p>Matrices have unit diagonal and ascending time order within each subject. AR(1) uses actual numeric time differences, not visit positions. Omitting rho triggers estimation for non-independence models. Supplied rho is fixed by default; <code>estimate_rho = TRUE</code> instead uses it as a starting value. Inspect <code>converged</code>: reaching the iteration limit does not issue a warning.</p>
+<p>Matrices have unit diagonal and ascending time order within each subject. AR(1) uses actual numeric time differences, not visit positions. For visits <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> of subject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, its entries are</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>i</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><msup><mi>ρ</mi><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo></mrow></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+(V_i)_{jk} = \rho^{|t_{ij}-t_{ik}|}.
+</annotation></semantics></math></p>
+<p>Omitting rho triggers estimation for non-independence models. Supplied rho is fixed by default; <code>estimate_rho = TRUE</code> instead uses it as a starting value. Inspect <code>converged</code>: reaching the iteration limit does not issue a warning.</p>
 </div>
 <div id="lasso-and-selected-terms" class="section level2">
 <h2>Lasso and selected terms</h2>
@@ -630,7 +639,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </tr>
 <tr class="even">
 <td><code>fitted.values</code></td>
-<td>Treatment contribution <code>T * estimated_ite / 2</code>, not the full ITE.</td>
+<td>Treatment contribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>, not the full ITE.</td>
 </tr>
 <tr class="odd">
 <td><code>residuals</code></td>
@@ -769,15 +778,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <!-- code folding -->
 
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
 </body>
 </html>

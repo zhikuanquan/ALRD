@@ -58,7 +58,7 @@ JSS paper remains the reference for software presentation and workflow.
 
 I selected one bounded implementation task: covariance validity. The package
 now rejects non-finite/non-numeric times, exchangeable rho at or below
--1/(m-1), duplicate AR(1) times, and negative AR(1) rho with fractional gaps.
+$-1/(m-1)$, duplicate AR(1) times, and negative AR(1) rho with fractional gaps.
 AR(1) matrices are checked for numerical positive definiteness. Estimated
 exchangeable rho respects the largest subject's lower bound, and fractional-gap
 AR(1) estimation searches a nonnegative interval. Help pages and the user guide
@@ -79,9 +79,14 @@ propensity weights need not recover m merely because the chosen basis contains
 m. This condition needs methodological clarification before a blanket double-
 robustness claim. No change to that estimator was made here.
 
-For example, with constant covariates, true p = 0.8, supplied p = 0.5,
-m = 0 and delta = 2, the two population least-squares stages give m-hat = 0.6
-and delta-hat = 1.28. This algebraic check concerns the nuisance estimator's
+For example, with constant covariates, true $p = 0.8$, supplied $p = 0.5$,
+$m = 0$ and $\delta = 2$, the two population least-squares stages give
+
+$$
+\widehat{m} = 0.6, \qquad \widehat{\delta} = 1.28.
+$$
+
+This algebraic check concerns the nuisance estimator's
 limit; it does not contradict the theorem's premise that the limiting m is true.
 
 The lasso uses glmnet's transformed-data scaling/standardization, so numerical
