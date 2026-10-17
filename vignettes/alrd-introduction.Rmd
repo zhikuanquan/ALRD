@@ -32,11 +32,10 @@ $$
 Here $m(X_{ij})$ is the main effect, $\delta(X_{ij})$ is the full
 treated-minus-control contrast, and $\varepsilon_{ij}$ is the outcome error.
 
-Install the evaluated local source:
+Install the package and dependencies:
 
 ```{r installation, eval=FALSE}
-install.packages("/Users/zhikuan_quan/Documents/ALRD",
-                 repos = NULL, type = "source")
+install.packages("ALRD")
 install.packages("glmnet")
 ```
 

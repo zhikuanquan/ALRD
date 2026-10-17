@@ -29,28 +29,30 @@ document.addEventListener('DOMContentLoaded', function(e) {
 </script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -62,55 +64,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -336,189 +337,257 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">ALRD: A practical guide to longitudinal treatment-effect estimation</h1>
+<h1 class="title toc-ignore">ALRD: A practical guide to longitudinal
+treatment-effect estimation</h1>
 
 
 
 <div id="purpose-and-installation" class="section level2">
 <h2>Purpose and installation</h2>
-<p>ALRD estimates a treated-minus-control conditional mean contrast from continuous repeated outcomes. LRD directly models the contrast; ALRD first models a main effect and then fits the residualized response. Positive ITE favors treatment only when larger outcomes are preferred. The intended design has independent subjects and one baseline treatment per subject. This development version does not implement treatment switching, survival outcomes, or inferential intervals.</p>
-<p>With signed baseline treatment <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mo>−</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">T_i \in \{-1,1\}</annotation></semantics></math>, the outcome model is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mfrac><msub><mi>T</mi><mi>i</mi></msub><mn>2</mn></mfrac><mi>δ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<p>ALRD estimates a treated-minus-control conditional mean contrast from
+continuous repeated outcomes. LRD directly models the contrast; ALRD
+first models a main effect and then fits the residualized response.
+Positive ITE favors treatment only when larger outcomes are preferred.
+The intended design has independent subjects and one baseline treatment
+per subject. This development version does not implement treatment
+switching, survival outcomes, or inferential intervals.</p>
+<p>With signed baseline treatment
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">T_i \in \{-1,1\}</annotation></semantics></math>,
+the outcome model is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mfrac><msub><mi>T</mi><mi>i</mi></msub><mn>2</mn></mfrac><mi>δ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
 Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 </annotation></semantics></math></p>
-<p>Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(X_{ij})</annotation></semantics></math> is the main effect, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\delta(X_{ij})</annotation></semantics></math> is the full treated-minus-control contrast, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\varepsilon_{ij}</annotation></semantics></math> is the outcome error.</p>
-<p>Install the evaluated local source:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;/Users/zhikuan_quan/Documents/ALRD&quot;</span>,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>                 <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;glmnet&quot;</span>)</span></code></pre></div>
-<p>The lasso option requires glmnet. This is not a claim of CRAN availability. Use <code>help(package = &quot;ALRD&quot;)</code>, <code>?fit_alrd</code>, and the other function help pages.</p>
+<p>Here
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">m(X_{ij})</annotation></semantics></math>
+is the main effect,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\delta(X_{ij})</annotation></semantics></math>
+is the full treated-minus-control contrast, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ε</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\varepsilon_{ij}</annotation></semantics></math>
+is the outcome error.</p>
+<p>Install the package and dependencies:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;ALRD&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;glmnet&quot;</span>)</span></code></pre></div>
+<p>The lasso option requires glmnet. This is not a claim of CRAN
+availability. Use <code>help(package = &quot;ALRD&quot;)</code>,
+<code>?fit_alrd</code>, and the other function help pages.</p>
 </div>
 <div id="prepare-and-check-long-format-data" class="section level2">
 <h2>Prepare and check long-format data</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;ALRD&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>dat &lt;-<span class="st"> </span><span class="kw">simulate_alrd_data</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">scenario =</span> <span class="dv">1</span>, <span class="dt">seed =</span> <span class="dv">2026</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">head</span>(dat[, <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;outcome&quot;</span>, <span class="st">&quot;propensity&quot;</span>)])</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="co">#&gt;     id time treatment    outcome propensity</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="co">#&gt; 1    1    1        -1 -2.1355176        0.5</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="co">#&gt; 101  1    2        -1 -1.3198643        0.5</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="co">#&gt; 201  1    3        -1 -2.3261012        0.5</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="co">#&gt; 301  1    4        -1 -2.0013266        0.5</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="co">#&gt; 401  1    5        -1 -4.3538265        0.5</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a><span class="co">#&gt; 2    2    1         1 -0.9978564        0.5</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>covs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>          <span class="st">&quot;time_z1&quot;</span>, <span class="st">&quot;time_z2&quot;</span>, <span class="st">&quot;time_z11&quot;</span>, <span class="st">&quot;time_z12&quot;</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>required &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;outcome&quot;</span>, covs)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">all</span>(<span class="kw">complete.cases</span>(dat[, required])),</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>          <span class="op">!</span><span class="kw">anyDuplicated</span>(dat[, <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>)]),</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>          <span class="kw">all</span>(<span class="kw">vapply</span>(<span class="kw">split</span>(dat<span class="op">$</span>treatment, dat<span class="op">$</span>id),</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a>                     <span class="cf">function</span>(x) <span class="kw">length</span>(<span class="kw">unique</span>(x)) <span class="op">==</span><span class="st"> </span>1L, <span class="kw">logical</span>(<span class="dv">1</span>))))</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">all</span>(<span class="kw">vapply</span>(dat[, <span class="kw">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;outcome&quot;</span>, covs)],</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>                     <span class="cf">function</span>(x) <span class="kw">is.numeric</span>(x) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">all</span>(<span class="kw">is.finite</span>(x)), <span class="kw">logical</span>(<span class="dv">1</span>))))</span></code></pre></div>
-<p>Treatment is assigned once per subject in this simulator. Numeric -1/1 or 0/1 coding is recommended. For factor treatment the second level is treated; for character treatment the alphabetically second value is treated.</p>
-<p>List existing columns in <code>covariates</code>; an intercept is added automatically. Precompute interactions such as <code>time_z1 = time * z1</code>. Both ALRD stages share the same basis. This compact example omits other prognostic variables in the simulator. The simulator’s <code>correlated</code> option concerns baseline covariates; outcome errors always include a random intercept with conditional correlation 0.5.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ALRD&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">simulate_alrd_data</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">scenario =</span> <span class="dv">1</span>, <span class="at">seed =</span> <span class="dv">2026</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">head</span>(dat[, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;outcome&quot;</span>, <span class="st">&quot;propensity&quot;</span>)])</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;     id time treatment    outcome propensity</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 1    1    1        -1 -2.1355176        0.5</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 101  1    2        -1 -1.3198643        0.5</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 201  1    3        -1 -2.3261012        0.5</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 301  1    4        -1 -2.0013266        0.5</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 401  1    5        -1 -4.3538265        0.5</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 2    2    1         1 -0.9978564        0.5</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>covs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>          <span class="st">&quot;time_z1&quot;</span>, <span class="st">&quot;time_z2&quot;</span>, <span class="st">&quot;time_z11&quot;</span>, <span class="st">&quot;time_z12&quot;</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>required <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;outcome&quot;</span>, covs)</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">complete.cases</span>(dat[, required])),</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>          <span class="sc">!</span><span class="fu">anyDuplicated</span>(dat[, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;time&quot;</span>)]),</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>          <span class="fu">all</span>(<span class="fu">vapply</span>(<span class="fu">split</span>(dat<span class="sc">$</span>treatment, dat<span class="sc">$</span>id),</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>                     <span class="cf">function</span>(x) <span class="fu">length</span>(<span class="fu">unique</span>(x)) <span class="sc">==</span> <span class="dv">1</span><span class="dt">L</span>, <span class="fu">logical</span>(<span class="dv">1</span>))))</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">vapply</span>(dat[, <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;outcome&quot;</span>, covs)],</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>                     <span class="cf">function</span>(x) <span class="fu">is.numeric</span>(x) <span class="sc">&amp;&amp;</span> <span class="fu">all</span>(<span class="fu">is.finite</span>(x)), <span class="fu">logical</span>(<span class="dv">1</span>))))</span></code></pre></div>
+<p>Treatment is assigned once per subject in this simulator. Numeric
+-1/1 or 0/1 coding is recommended. For factor treatment the second level
+is treated; for character treatment the alphabetically second value is
+treated.</p>
+<p>List existing columns in <code>covariates</code>; an intercept is
+added automatically. Precompute interactions such as
+<code>time_z1 = time * z1</code>. Both ALRD stages share the same basis.
+This compact example omits other prognostic variables in the simulator.
+The simulator’s <code>correlated</code> option concerns baseline
+covariates; outcome errors always include a random intercept with
+conditional correlation 0.5.</p>
 </div>
 <div id="hold-out-subjects-before-fitting" class="section level2">
 <h2>Hold out subjects before fitting</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">7</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>training_ids &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(dat<span class="op">$</span>id), <span class="dv">75</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>train &lt;-<span class="st"> </span>dat[dat<span class="op">$</span>id <span class="op">%in%</span><span class="st"> </span>training_ids, ]</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>test &lt;-<span class="st"> </span>dat[<span class="op">!</span>dat<span class="op">$</span>id <span class="op">%in%</span><span class="st"> </span>training_ids, ]</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">length</span>(<span class="kw">intersect</span>(train<span class="op">$</span>id, test<span class="op">$</span>id)) <span class="op">==</span><span class="st"> </span>0L)</span></code></pre></div>
-<p>Keep all visits from each subject together. Fit nuisance models and tune models using only training subjects. Reserve the test sample for evaluation.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>training_ids <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">unique</span>(dat<span class="sc">$</span>id), <span class="dv">75</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>train <span class="ot">&lt;-</span> dat[dat<span class="sc">$</span>id <span class="sc">%in%</span> training_ids, ]</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>test <span class="ot">&lt;-</span> dat[<span class="sc">!</span>dat<span class="sc">$</span>id <span class="sc">%in%</span> training_ids, ]</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">length</span>(<span class="fu">intersect</span>(train<span class="sc">$</span>id, test<span class="sc">$</span>id)) <span class="sc">==</span> <span class="dv">0</span><span class="dt">L</span>)</span></code></pre></div>
+<p>Keep all visits from each subject together. Fit nuisance models and
+tune models using only training subjects. Reserve the test sample for
+evaluation.</p>
 </div>
 <div id="fit-lrd-and-alrd" class="section level2">
 <h2>Fit LRD and ALRD</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>lrd &lt;-<span class="st"> </span><span class="kw">fit_lrd</span>(train, id, time, treatment, outcome, covs, <span class="dt">ps =</span> <span class="fl">0.5</span>,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>               <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>alrd &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(train, id, time, treatment, outcome, covs, <span class="dt">ps =</span> <span class="fl">0.5</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>                 <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="kw">print</span>(lrd)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="co">#&gt; Longitudinal residual difference learning fit</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="co">#&gt;   Working covariance: exchangeable </span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="co">#&gt;   Rho: 0.5 </span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co">#&gt;   Coefficients: 10</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="kw">print</span>(alrd)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="co">#&gt; Augmented longitudinal residual difference learning fit</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="co">#&gt;   Working covariance: exchangeable </span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a><span class="co">#&gt;   Rho: 0.5 </span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a><span class="co">#&gt;   Penalty: none </span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a><span class="co">#&gt;   Coefficients: 10</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a><span class="kw">head</span>(alrd<span class="op">$</span>coefficients)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a><span class="co">#&gt; ite_(Intercept)        ite_time          ite_z1          ite_z2         ite_z11 </span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a><span class="co">#&gt;      0.85606345      0.01046478     -0.24752978      0.09564140      1.16759040 </span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a><span class="co">#&gt;         ite_z12 </span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a><span class="co">#&gt;     -0.77459070</span></span></code></pre></div>
-<p>Supply the known treatment probability explicitly for randomized studies. With <code>ps = NULL</code>, LRD assumes 0.5, whereas ALRD estimates a logistic model from all long-data rows using the outcome covariates.</p>
-<p>The coefficients describe the ITE basis. However, <code>fitted.values</code> is the treatment contribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>, not the ITE or full outcome. For ALRD, the full fitted outcome also includes <code>main_effect</code>. Obtain contrasts using <code>predict_ite()</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>lrd <span class="ot">&lt;-</span> <span class="fu">fit_lrd</span>(train, id, time, treatment, outcome, covs, <span class="at">ps =</span> <span class="fl">0.5</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>               <span class="at">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="at">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>alrd <span class="ot">&lt;-</span> <span class="fu">fit_alrd</span>(train, id, time, treatment, outcome, covs, <span class="at">ps =</span> <span class="fl">0.5</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                 <span class="at">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="at">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">print</span>(lrd)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; Longitudinal residual difference learning fit</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;   Working covariance: exchangeable </span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;   Rho: 0.5 </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;   Coefficients: 10</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="fu">print</span>(alrd)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; Augmented longitudinal residual difference learning fit</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;   Working covariance: exchangeable </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;   Rho: 0.5 </span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;   Penalty: none </span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;   Coefficients: 10</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="fu">head</span>(alrd<span class="sc">$</span>coefficients)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; ite_(Intercept)        ite_time          ite_z1          ite_z2         ite_z11         ite_z12 </span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt;      0.85606345      0.01046478     -0.24752978      0.09564140      1.16759040     -0.77459070</span></span></code></pre></div>
+<p>Supply the known treatment probability explicitly for randomized
+studies. With <code>ps = NULL</code>, LRD assumes 0.5, whereas ALRD
+estimates a logistic model from all long-data rows using the outcome
+covariates.</p>
+<p>The coefficients describe the ITE basis. However,
+<code>fitted.values</code> is the treatment contribution
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>,
+not the ITE or full outcome. For ALRD, the full fitted outcome also
+includes <code>main_effect</code>. Obtain contrasts using
+<code>predict_ite()</code>.</p>
 </div>
 <div id="covariance-and-convergence" class="section level2">
 <h2>Covariance and convergence</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>matrices &lt;-<span class="st"> </span><span class="kw">working_covariance</span>(train, id, time, <span class="st">&quot;ar1&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>matrices[[<span class="dv">1</span>]]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="co">#&gt;        [,1]  [,2] [,3]  [,4]   [,5]</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="co">#&gt; [1,] 1.0000 0.500 0.25 0.125 0.0625</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="co">#&gt; [2,] 0.5000 1.000 0.50 0.250 0.1250</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co">#&gt; [3,] 0.2500 0.500 1.00 0.500 0.2500</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="co">#&gt; [4,] 0.1250 0.250 0.50 1.000 0.5000</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="co">#&gt; [5,] 0.0625 0.125 0.25 0.500 1.0000</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">all</span>(<span class="kw">vapply</span>(matrices, <span class="cf">function</span>(v) {</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>  <span class="kw">min</span>(<span class="kw">eigen</span>(v, <span class="dt">symmetric =</span> <span class="ot">TRUE</span>, <span class="dt">only.values =</span> <span class="ot">TRUE</span>)<span class="op">$</span>values) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>}, <span class="kw">logical</span>(<span class="dv">1</span>))))</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>estimated &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(train, id, time, treatment, outcome, covs,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>                      <span class="dt">ps =</span> <span class="fl">0.5</span>, <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>estimated<span class="op">$</span>rho_estimation</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a><span class="co">#&gt; $estimated</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="co">#&gt; [1] TRUE</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a><span class="co">#&gt; $history</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a><span class="co">#&gt; [1] 0.3000000 0.8475567 0.8475567</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a><span class="co">#&gt; $converged</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a><span class="co">#&gt; [1] TRUE</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a><span class="co">#&gt; $iterations</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a><span class="co">#&gt; [1] 2</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a><span class="co">#&gt; $tolerance</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a><span class="co">#&gt; [1] 0.001</span></span></code></pre></div>
-<p>Matrices have unit diagonal and ascending time order within each subject. AR(1) uses actual numeric time differences, not visit positions. For visits <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> of subject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, its entries are</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>i</mi></msub><msub><mo stretchy="false" form="postfix">)</mo><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><msup><mi>ρ</mi><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo></mrow></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>matrices <span class="ot">&lt;-</span> <span class="fu">working_covariance</span>(train, id, time, <span class="st">&quot;ar1&quot;</span>, <span class="at">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>matrices[[<span class="dv">1</span>]]</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt;        [,1]  [,2] [,3]  [,4]   [,5]</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1,] 1.0000 0.500 0.25 0.125 0.0625</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [2,] 0.5000 1.000 0.50 0.250 0.1250</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; [3,] 0.2500 0.500 1.00 0.500 0.2500</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [4,] 0.1250 0.250 0.50 1.000 0.5000</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; [5,] 0.0625 0.125 0.25 0.500 1.0000</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">vapply</span>(matrices, <span class="cf">function</span>(v) {</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="fu">min</span>(<span class="fu">eigen</span>(v, <span class="at">symmetric =</span> <span class="cn">TRUE</span>, <span class="at">only.values =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>values) <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>}, <span class="fu">logical</span>(<span class="dv">1</span>))))</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>estimated <span class="ot">&lt;-</span> <span class="fu">fit_alrd</span>(train, id, time, treatment, outcome, covs,</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>                      <span class="at">ps =</span> <span class="fl">0.5</span>, <span class="at">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>estimated<span class="sc">$</span>rho_estimation</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; $estimated</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; $history</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; [1] 0.3000000 0.8475567 0.8475567</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; $converged</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; $iterations</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; $tolerance</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; [1] 0.001</span></span></code></pre></div>
+<p>Matrices have unit diagonal and ascending time order within each
+subject. AR(1) uses actual numeric time differences, not visit
+positions. For visits
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+of subject
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
+its entries are</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>V</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><msup><mi>ρ</mi><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>t</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo stretchy="true" form="postfix">|</mo></mrow></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
 (V_i)_{jk} = \rho^{|t_{ij}-t_{ik}|}.
 </annotation></semantics></math></p>
-<p>Omitting rho triggers estimation for non-independence models. Supplied rho is fixed by default; <code>estimate_rho = TRUE</code> instead uses it as a starting value. Inspect <code>converged</code>: reaching the iteration limit does not issue a warning.</p>
+<p>Omitting rho triggers estimation for non-independence models.
+Supplied rho is fixed by default; <code>estimate_rho = TRUE</code>
+instead uses it as a starting value. Inspect <code>converged</code>:
+reaching the iteration limit does not issue a warning.</p>
 </div>
 <div id="lasso-and-selected-terms" class="section level2">
 <h2>Lasso and selected terms</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="cf">if</span> (<span class="kw">requireNamespace</span>(<span class="st">&quot;glmnet&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  sparse &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(train, id, time, treatment, outcome, covs, <span class="dt">ps =</span> <span class="fl">0.5</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>                     <span class="dt">penalty =</span> <span class="st">&quot;lasso&quot;</span>, <span class="dt">refit =</span> <span class="ot">TRUE</span>, <span class="dt">nfolds =</span> <span class="dv">3</span>, <span class="dt">seed =</span> <span class="dv">7</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>                     <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>  <span class="kw">print</span>(sparse)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>  <span class="kw">print</span>(sparse<span class="op">$</span>selected_terms)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>  <span class="kw">print</span>(<span class="kw">c</span>(<span class="dt">lambda_min =</span> sparse<span class="op">$</span>lambda, <span class="dt">lambda_1se =</span> sparse<span class="op">$</span>lambda_1se))</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>}</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="co">#&gt; Augmented longitudinal residual difference learning fit</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="co">#&gt;   Working covariance: exchangeable </span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="co">#&gt;   Rho: 0.5 </span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="co">#&gt;   Penalty: lasso </span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a><span class="co">#&gt;   Lambda: 1.085 </span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a><span class="co">#&gt;   Selected ITE terms: 1 </span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a><span class="co">#&gt;   Coefficients: 10 </span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;ite_(Intercept)&quot;</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a><span class="co">#&gt; lambda_min lambda_1se </span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a><span class="co">#&gt;   1.084807   1.084807</span></span></code></pre></div>
-<p>Both stages use lasso and select their own <code>lambda.min</code>. Only the ITE stage is refitted without penalty. <code>lambda_1se</code> is stored but not used for selection. Selected terms are design columns, including possibly the intercept and factor contrasts, not necessarily distinct clinical variables.</p>
-<p>Subject folds keep repeated rows together inside each glmnet call. However, main-effect residualization, internally estimated propensity scores, and working correlation use the full fitting sample before ITE-stage validation. Consequently, this CV curve does not validate the entire procedure. Use external test subjects and plan full-pipeline subject resampling before publication.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">requireNamespace</span>(<span class="st">&quot;glmnet&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  sparse <span class="ot">&lt;-</span> <span class="fu">fit_alrd</span>(train, id, time, treatment, outcome, covs, <span class="at">ps =</span> <span class="fl">0.5</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                     <span class="at">penalty =</span> <span class="st">&quot;lasso&quot;</span>, <span class="at">refit =</span> <span class="cn">TRUE</span>, <span class="at">nfolds =</span> <span class="dv">3</span>, <span class="at">seed =</span> <span class="dv">7</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                     <span class="at">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="at">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">print</span>(sparse)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">print</span>(sparse<span class="sc">$</span>selected_terms)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">c</span>(<span class="at">lambda_min =</span> sparse<span class="sc">$</span>lambda, <span class="at">lambda_1se =</span> sparse<span class="sc">$</span>lambda_1se))</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>}</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; Augmented longitudinal residual difference learning fit</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;   Working covariance: exchangeable </span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt;   Rho: 0.5 </span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt;   Penalty: lasso </span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;   Lambda: 1.085 </span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;   Selected ITE terms: 1 </span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;   Coefficients: 10 </span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ite_(Intercept)&quot;</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; lambda_min lambda_1se </span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt;   1.084807   1.084807</span></span></code></pre></div>
+<p>Both stages use lasso and select their own <code>lambda.min</code>.
+Only the ITE stage is refitted without penalty. <code>lambda_1se</code>
+is stored but not used for selection. Selected terms are design columns,
+including possibly the intercept and factor contrasts, not necessarily
+distinct clinical variables.</p>
+<p>Subject folds keep repeated rows together inside each glmnet call.
+However, main-effect residualization, internally estimated propensity
+scores, and working correlation use the full fitting sample before
+ITE-stage validation. Consequently, this CV curve does not validate the
+entire procedure. Use external test subjects and plan full-pipeline
+subject resampling before publication.</p>
 </div>
 <div id="predictions-and-evaluation" class="section level2">
 <h2>Predictions and evaluation</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>prediction &lt;-<span class="st"> </span><span class="kw">predict_ite</span>(alrd, test)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">length</span>(prediction) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(test), <span class="kw">all</span>(<span class="kw">is.finite</span>(prediction)))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>subject_mse &lt;-<span class="st"> </span><span class="kw">tapply</span>((prediction <span class="op">-</span><span class="st"> </span>test<span class="op">$</span>true_ite)<span class="op">^</span><span class="dv">2</span>, test<span class="op">$</span>id, mean)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>subject_agreement &lt;-<span class="st"> </span><span class="kw">tapply</span>((prediction <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">==</span><span class="st"> </span>(test<span class="op">$</span>true_ite <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>), test<span class="op">$</span>id, mean)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="kw">data.frame</span>(<span class="dt">metric =</span> <span class="kw">c</span>(<span class="st">&quot;Mean subject trajectory MSE&quot;</span>, <span class="st">&quot;Mean subject sign agreement&quot;</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>            <span class="dt">value =</span> <span class="kw">c</span>(<span class="kw">mean</span>(subject_mse), <span class="kw">mean</span>(subject_agreement)))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="co">#&gt;                        metric    value</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a><span class="co">#&gt; 1 Mean subject trajectory MSE 9.986187</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a><span class="co">#&gt; 2 Mean subject sign agreement 0.792000</span></span></code></pre></div>
-<p>These explicitly defined demonstration metrics do not replace the definitions in the existing simulation scripts. True ITE is known only in simulation. This single split is a usage example, not evidence of superiority or validated subgroup effects. Real-data evaluation requires an appropriate observable policy-value or subgroup-effect estimator.</p>
-<p>Predict one fixed covariate profile over time, recomputing all interactions:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>profile &lt;-<span class="st"> </span>test[<span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">5</span>), covs, drop =<span class="st"> </span><span class="ot">FALSE</span>]</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>profile<span class="op">$</span>time &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="cf">for</span> (nm <span class="cf">in</span> <span class="kw">c</span>(<span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>)) {</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>  profile[[<span class="kw">paste0</span>(<span class="st">&quot;time_&quot;</span>, nm)]] &lt;-<span class="st"> </span>profile<span class="op">$</span>time <span class="op">*</span><span class="st"> </span>profile[[nm]]</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>}</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>trajectory &lt;-<span class="st"> </span><span class="kw">predict_ite</span>(alrd, profile)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="kw">plot</span>(profile<span class="op">$</span>time, trajectory, <span class="dt">type =</span> <span class="st">&quot;b&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;Time&quot;</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Estimated treated-minus-control contrast&quot;</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">0</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>)</span></code></pre></div>
-<p><img src="data:image/png;base64,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7Jj99ddfAaV038yZMwPex0EEEEAAAQQQQCBUBTwDoOnTp1vDhg0D1n/RokVWvXp127t3b8D7OYgAAggggAACCISiQJozZ0vcih0/ftxat25thw8ftl27dtmaNWusatWqsR6mp61atcoFP/v377c0adLEup8bCCCAAAIIIIBAqAoE7AHKlCmT1alTxy666CJLnz69C2503f+ix1SrVs3Gjx9P8BOq7y71QgABBBBAAIGAAgF7gPwfuWDBAhs7dqwNGjTI/zDXEUAAAQQQQACBsBXwDIB8LdOQl2+Ya+fOnfbLL79YxYoVLW/evL6H8BMBBBBAAAEEEAgLgYBDYHFrPmTIECtdurQ7vG7dOitRooQ1adLErrzySps8eXLch3MbAQQQQAABBBAIaQHPAGj16tXWrVs3u/XWW029QAMGDHDzgubOnWuPPPKIdejQIaQbSOUQQAABBBBAAIG4Ap5DYB9++KH169fPrfjSk/Pnz28NGjSw9957z+UHypcvn/uZJ0+euK/NbQQQQAABBBBAICQFPHuA9uzZY7lz53aVX758uW3bts1q167tbp84ccL1BmXOnDkkG0elEEAAAQQQQACBQAKeAVCZMmVMCQ+V8XngwIF28cUXW61atezgwYOuZ6hSpUqWLVu2QK/NMQQQQAABBBBAICQF0nvVqkaNGm7ISxmfVQYPHmxZs2a1Bx980CZOnGjDhg1zx/kHAQQQQAABBBAIFwHPOUBqiCY/r1y50rJnz24FChRwbVu8eLEVK1aM3p9weaepJwIIIIAAAgjECCQqAIp5dIAr+/btsxw5cgS4h0MIIIAAAggggEBoCngOganaP/74o73zzju2e/du++eff1xL9PPo0aOmZfKaDE1BAAEEEEAAAQTCRcBzEvSWLVusUaNGprw/GTJkMK0E05J3bYC6YsUKe/nll8OlrdQTAQQQQAABBBBwAp49QLNnz7bTp0+bMkCr10dL4seMGWNZsmSxzp072/r166FEAAEEEEAAAQTCSsCzB+ivv/4yLXW/5JJL3CRo7f01f/58ty9Y3759bfjw4fb333+HVaOpLAIIIIAAAghEt4BnAFS4cGHbsGFDjFLJkiVtzpw57rZv8vPWrVtj7ucKAggggAACCCAQ6gKeAVCVKlXcfJ+2bduaVnzptobANBeof//+bkisUKFCod5O6ocAAggggAAC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" /><!-- --></p>
-<p>A time-dependent contrast under baseline treatment does not establish that switching treatment at a particular visit would improve outcomes.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> <span class="fu">predict_ite</span>(alrd, test)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">length</span>(prediction) <span class="sc">==</span> <span class="fu">nrow</span>(test), <span class="fu">all</span>(<span class="fu">is.finite</span>(prediction)))</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>subject_mse <span class="ot">&lt;-</span> <span class="fu">tapply</span>((prediction <span class="sc">-</span> test<span class="sc">$</span>true_ite)<span class="sc">^</span><span class="dv">2</span>, test<span class="sc">$</span>id, mean)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>subject_agreement <span class="ot">&lt;-</span> <span class="fu">tapply</span>((prediction <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">==</span> (test<span class="sc">$</span>true_ite <span class="sc">&gt;</span> <span class="dv">0</span>), test<span class="sc">$</span>id, mean)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">metric =</span> <span class="fu">c</span>(<span class="st">&quot;Mean subject trajectory MSE&quot;</span>, <span class="st">&quot;Mean subject sign agreement&quot;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>            <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">mean</span>(subject_mse), <span class="fu">mean</span>(subject_agreement)))</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;                        metric    value</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; 1 Mean subject trajectory MSE 9.986187</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; 2 Mean subject sign agreement 0.792000</span></span></code></pre></div>
+<p>These explicitly defined demonstration metrics do not replace the
+definitions in the existing simulation scripts. True ITE is known only
+in simulation. This single split is a usage example, not evidence of
+superiority or validated subgroup effects. Real-data evaluation requires
+an appropriate observable policy-value or subgroup-effect estimator.</p>
+<p>Predict one fixed covariate profile over time, recomputing all
+interactions:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>profile <span class="ot">&lt;-</span> test[<span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">5</span>), covs, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>profile<span class="sc">$</span>time <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="cf">for</span> (nm <span class="cf">in</span> <span class="fu">c</span>(<span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>)) {</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  profile[[<span class="fu">paste0</span>(<span class="st">&quot;time_&quot;</span>, nm)]] <span class="ot">&lt;-</span> profile<span class="sc">$</span>time <span class="sc">*</span> profile[[nm]]</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>}</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>trajectory <span class="ot">&lt;-</span> <span class="fu">predict_ite</span>(alrd, profile)</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">plot</span>(profile<span class="sc">$</span>time, trajectory, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Time&quot;</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Estimated treated-minus-control contrast&quot;</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;grey50&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>A time-dependent contrast under baseline treatment does not establish
+that switching treatment at a particular visit would improve
+outcomes.</p>
 </div>
 <div id="observational-baseline-assignment" class="section level2">
 <h2>Observational baseline assignment</h2>
-<p>Fit the propensity model on one row per subject with pre-treatment confounders and map scores to visits. For an external evaluation, fit this model on training subjects only and predict for held-out subjects.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>obs &lt;-<span class="st"> </span><span class="kw">simulate_alrd_data</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">scenario =</span> <span class="dv">3</span>, <span class="dt">seed =</span> <span class="dv">15</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>baseline &lt;-<span class="st"> </span>obs[<span class="op">!</span><span class="kw">duplicated</span>(obs<span class="op">$</span>id), ]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>ps_fit &lt;-<span class="st"> </span><span class="kw">estimate_ps</span>(baseline, treatment, <span class="kw">c</span>(<span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>ps_rows &lt;-<span class="st"> </span>ps_fit<span class="op">$</span>scores[<span class="kw">match</span>(obs<span class="op">$</span>id, baseline<span class="op">$</span>id)]</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="kw">stopifnot</span>(<span class="kw">length</span>(ps_rows) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(obs), <span class="kw">all</span>(ps_rows <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ps_rows <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a><span class="kw">tapply</span>(ps_fit<span class="op">$</span>scores, baseline<span class="op">$</span>treatment, range)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a><span class="co">#&gt; $`-1`</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a><span class="co">#&gt; [1] 0.07635625 0.92098474</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a><span class="co">#&gt; $`1`</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a><span class="co">#&gt; [1] 0.2586560 0.9673418</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>obs_fit &lt;-<span class="st"> </span><span class="kw">fit_alrd</span>(obs, id, time, treatment, outcome, covs, <span class="dt">ps =</span> ps_rows,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>                    <span class="dt">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="dt">rho =</span> <span class="fl">0.5</span>)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">predict_ite</span>(obs_fit))</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true"></a><span class="co">#&gt; [1] -2.297498 -3.791679 -5.285860 -6.780041 -8.274222  2.565249</span></span></code></pre></div>
-<p>This last example demonstrates fitting only. Clipping does not establish overlap; inspect unclipped probabilities and covariate balance before analysis. Do not include post-treatment variables in a baseline assignment model.</p>
+<p>Fit the propensity model on one row per subject with pre-treatment
+confounders and map scores to visits. For an external evaluation, fit
+this model on training subjects only and predict for held-out
+subjects.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>obs <span class="ot">&lt;-</span> <span class="fu">simulate_alrd_data</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">scenario =</span> <span class="dv">3</span>, <span class="at">seed =</span> <span class="dv">15</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> obs[<span class="sc">!</span><span class="fu">duplicated</span>(obs<span class="sc">$</span>id), ]</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>ps_fit <span class="ot">&lt;-</span> <span class="fu">estimate_ps</span>(baseline, treatment, <span class="fu">c</span>(<span class="st">&quot;z1&quot;</span>, <span class="st">&quot;z2&quot;</span>, <span class="st">&quot;z11&quot;</span>, <span class="st">&quot;z12&quot;</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>ps_rows <span class="ot">&lt;-</span> ps_fit<span class="sc">$</span>scores[<span class="fu">match</span>(obs<span class="sc">$</span>id, baseline<span class="sc">$</span>id)]</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">length</span>(ps_rows) <span class="sc">==</span> <span class="fu">nrow</span>(obs), <span class="fu">all</span>(ps_rows <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> ps_rows <span class="sc">&lt;</span> <span class="dv">1</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="fu">tapply</span>(ps_fit<span class="sc">$</span>scores, baseline<span class="sc">$</span>treatment, range)</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; $`-1`</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [1] 0.07635625 0.92098474</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; $`1`</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; [1] 0.2586560 0.9673418</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>obs_fit <span class="ot">&lt;-</span> <span class="fu">fit_alrd</span>(obs, id, time, treatment, outcome, covs, <span class="at">ps =</span> ps_rows,</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>                    <span class="at">covariance =</span> <span class="st">&quot;exchangeable&quot;</span>, <span class="at">rho =</span> <span class="fl">0.5</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">predict_ite</span>(obs_fit))</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; [1] -2.297498 -3.791679 -5.285860 -6.780041 -8.274222  2.565249</span></span></code></pre></div>
+<p>This last example demonstrates fitting only. Clipping does not
+establish overlap; inspect unclipped probabilities and covariate balance
+before analysis. Do not include post-treatment variables in a baseline
+assignment model.</p>
 </div>
 <div id="data-dictionary-and-function-selection" class="section level2">
 <h2>Data dictionary and function selection</h2>
-<p>Use one row per subject and visit. Column names are configurable in fitting calls; the names below are those used by the running example.</p>
+<p>Use one row per subject and visit. Column names are configurable in
+fitting calls; the names below are those used by the running
+example.</p>
 <table>
 <colgroup>
 <col width="33%" />
@@ -541,7 +610,8 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 <tr class="even">
 <td><code>time</code></td>
 <td>Measurement time</td>
-<td>Finite numeric values; distinct within subject for AR(1). Units determine rho interpretation.</td>
+<td>Finite numeric values; distinct within subject for AR(1). Units
+determine rho interpretation.</td>
 </tr>
 <tr class="odd">
 <td><code>treatment</code></td>
@@ -566,11 +636,17 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 <tr class="odd">
 <td>Supplied <code>weights</code></td>
 <td>Additional analysis weights</td>
-<td>Use positive values constant within subject for the documented loss.</td>
+<td>Use positive values constant within subject for the documented
+loss.</td>
 </tr>
 </tbody>
 </table>
-<p>The simulator’s <code>true_main</code>, <code>true_ite</code>, and <code>propensity</code> are known generating quantities. Do not use truth columns as predictors in a performance comparison. Numeric covariate columns are the most reliable current prediction interface; factor encoding needs particular care as described in <code>?predict_ite</code>.</p>
+<p>The simulator’s <code>true_main</code>, <code>true_ite</code>, and
+<code>propensity</code> are known generating quantities. Do not use
+truth columns as predictors in a performance comparison. Numeric
+covariate columns are the most reliable current prediction interface;
+factor encoding needs particular care as described in
+<code>?predict_ite</code>.</p>
 <table>
 <colgroup>
 <col width="33%" />
@@ -620,7 +696,10 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 </div>
 <div id="fitted-object-reference" class="section level2">
 <h2>Fitted-object reference</h2>
-<p>Both fitting functions accept bare column names or strings for the data-role arguments. For programmatic calls, strings make the mapping explicit. <code>covariates</code> is always a character vector of existing column names.</p>
+<p>Both fitting functions accept bare column names or strings for the
+data-role arguments. For programmatic calls, strings make the mapping
+explicit. <code>covariates</code> is always a character vector of
+existing column names.</p>
 <table>
 <colgroup>
 <col width="50%" />
@@ -635,15 +714,19 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 <tbody>
 <tr class="odd">
 <td><code>coefficients</code></td>
-<td>ITE coefficients; names have an <code>ite_</code> prefix. ALRD lasso coefficients may be post-selection refitted.</td>
+<td>ITE coefficients; names have an <code>ite_</code> prefix. ALRD lasso
+coefficients may be post-selection refitted.</td>
 </tr>
 <tr class="even">
 <td><code>fitted.values</code></td>
-<td>Treatment contribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>, not the full ITE.</td>
+<td>Treatment contribution
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mi>i</mi></msub><mover><mi>δ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">T_i\widehat{\delta}(X_{ij})/2</annotation></semantics></math>,
+not the full ITE.</td>
 </tr>
 <tr class="odd">
 <td><code>residuals</code></td>
-<td>Outcome minus the fitted contribution; ALRD also subtracts the main effect.</td>
+<td>Outcome minus the fitted contribution; ALRD also subtracts the main
+effect.</td>
 </tr>
 <tr class="even">
 <td><code>main_effect</code>, <code>main_model</code></td>
@@ -655,15 +738,19 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 </tr>
 <tr class="even">
 <td><code>propensity_for_received</code></td>
-<td>Treated probability for treated subjects, its complement for controls.</td>
+<td>Treated probability for treated subjects, its complement for
+controls.</td>
 </tr>
 <tr class="odd">
 <td><code>rho_estimation</code></td>
-<td>List with <code>estimated</code>, <code>history</code>, <code>converged</code>, <code>iterations</code>, and <code>tolerance</code>.</td>
+<td>List with <code>estimated</code>, <code>history</code>,
+<code>converged</code>, <code>iterations</code>, and
+<code>tolerance</code>.</td>
 </tr>
 <tr class="even">
 <td><code>selected_terms</code></td>
-<td>ALRD’s ITE design-column names; all columns for unpenalized fits.</td>
+<td>ALRD’s ITE design-column names; all columns for unpenalized
+fits.</td>
 </tr>
 <tr class="odd">
 <td><code>lambda</code>, <code>lambda_1se</code></td>
@@ -671,15 +758,21 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 </tr>
 <tr class="even">
 <td><code>lasso_coefficients</code>, <code>refit_model</code></td>
-<td>Lasso-only penalized coefficients and optional unpenalized refit.</td>
+<td>Lasso-only penalized coefficients and optional unpenalized
+refit.</td>
 </tr>
 <tr class="odd">
 <td><code>cv_model</code></td>
-<td>Lasso-only ITE-stage cv.glmnet object; first-stage tuning is in <code>main_model</code>.</td>
+<td>Lasso-only ITE-stage cv.glmnet object; first-stage tuning is in
+<code>main_model</code>.</td>
 </tr>
 </tbody>
 </table>
-<p><code>print(fit)</code> reports the fit configuration. There are currently no dedicated <code>summary()</code>, <code>confint()</code>, or model <code>plot()</code> methods; use documented components and <code>predict_ite()</code> rather than interpreting a generic list summary as inference.</p>
+<p><code>print(fit)</code> reports the fit configuration. There are
+currently no dedicated <code>summary()</code>, <code>confint()</code>,
+or model <code>plot()</code> methods; use documented components and
+<code>predict_ite()</code> rather than interpreting a generic list
+summary as inference.</p>
 </div>
 <div id="current-limitations" class="section level2">
 <h2>Current limitations</h2>
@@ -701,15 +794,18 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 </tr>
 <tr class="even">
 <td>Missing prediction values</td>
-<td>Rows may be silently dropped; check completeness and output length.</td>
+<td>Rows may be silently dropped; check completeness and output
+length.</td>
 </tr>
 <tr class="odd">
 <td>Reordered or novel factor levels</td>
-<td>Use a consistently prepared numeric basis until factor encoding is fixed.</td>
+<td>Use a consistently prepared numeric basis until factor encoding is
+fixed.</td>
 </tr>
 <tr class="even">
 <td>Collinear columns</td>
-<td>NA coefficients may propagate to all predictions; check model-matrix rank.</td>
+<td>NA coefficients may propagate to all predictions; check model-matrix
+rank.</td>
 </tr>
 <tr class="odd">
 <td>Zero weights</td>
@@ -717,15 +813,18 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 </tr>
 <tr class="even">
 <td>Within-subject varying weights</td>
-<td>Their loss differs from scalar subject weighting; use positive subject-constant weights.</td>
+<td>Their loss differs from scalar subject weighting; use positive
+subject-constant weights.</td>
 </tr>
 <tr class="odd">
 <td>Invalid covariance</td>
-<td>Out-of-range exchangeable rho and duplicate AR(1) times are now rejected explicitly.</td>
+<td>Out-of-range exchangeable rho and duplicate AR(1) times are now
+rejected explicitly.</td>
 </tr>
 <tr class="even">
 <td>Fractional times</td>
-<td>Use nonnegative rho for AR(1); negative rho with fractional gaps is rejected.</td>
+<td>Use nonnegative rho for AR(1); negative rho with fractional gaps is
+rejected.</td>
 </tr>
 <tr class="odd">
 <td>Two folds</td>
@@ -733,44 +832,43 @@ Y_{ij} = m(X_{ij}) + \frac{T_i}{2}\delta(X_{ij}) + \varepsilon_{ij}.
 </tr>
 <tr class="even">
 <td>Inference</td>
-<td>Dedicated standard errors, intervals, and subgroup validation are absent.</td>
+<td>Dedicated standard errors, intervals, and subgroup validation are
+absent.</td>
 </tr>
 </tbody>
 </table>
-<p>For troubleshooting retain the call, data dimensions, treatment coding, propensity range, visit times, and convergence history.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">sessionInfo</span>()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="co">#&gt; Platform: x86_64-apple-darwin20</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="co">#&gt; Running under: macOS 26.3.1</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a><span class="co">#&gt; Matrix products: default</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRblas.0.dylib </span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true"></a><span class="co">#&gt; locale:</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true"></a><span class="co">#&gt; [1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true"></a><span class="co">#&gt; time zone: America/Los_Angeles</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true"></a><span class="co">#&gt; tzcode source: internal</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true"></a><span class="co">#&gt; attached base packages:</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true"></a><span class="co">#&gt; [1] ALRD_0.0.0.9000 testthat_3.3.2 </span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true"></a><span class="co">#&gt; </span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true"></a><span class="co">#&gt;  [1] cli_3.6.6        knitr_1.51       rlang_1.2.0      xfun_0.57       </span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true"></a><span class="co">#&gt;  [5] otel_0.2.0       pkgload_1.5.2    jsonlite_2.0.0   rprojroot_2.1.1 </span></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true"></a><span class="co">#&gt;  [9] htmltools_0.5.9  roxygen2_8.0.0   pkgbuild_1.4.8   sass_0.4.10     </span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true"></a><span class="co">#&gt; [13] glmnet_5.0       brio_1.1.5       rmarkdown_2.31   grid_4.4.2      </span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true"></a><span class="co">#&gt; [17] evaluate_1.0.5   jquerylib_0.1.4  fastmap_1.2.0    foreach_1.5.2   </span></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true"></a><span class="co">#&gt; [21] yaml_2.3.12      lifecycle_1.0.5  compiler_4.4.2   codetools_0.2-20</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true"></a><span class="co">#&gt; [25] fs_2.1.0         Rcpp_1.1.1-1.1   lattice_0.22-9   digest_0.6.39   </span></span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true"></a><span class="co">#&gt; [29] R6_2.6.1         splines_4.4.2    shape_1.4.6.1    commonmark_2.0.0</span></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true"></a><span class="co">#&gt; [33] magrittr_2.0.5   Matrix_1.7-5     bslib_0.11.0     tools_4.4.2     </span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true"></a><span class="co">#&gt; [37] withr_3.0.2      iterators_1.0.14 survival_3.8-6   cachem_1.1.0    </span></span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true"></a><span class="co">#&gt; [41] xml2_1.5.2       desc_1.4.3</span></span></code></pre></div>
+<p>For troubleshooting retain the call, data dimensions, treatment
+coding, propensity range, visit times, and convergence history.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; R version 4.5.1 (2025-06-13 ucrt)</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 11 x64 (build 26200)</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt;   LAPACK version 3.12.1</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; [1] LC_COLLATE=English_United States.utf8  LC_CTYPE=English_United States.utf8   </span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; [3] LC_MONETARY=English_United States.utf8 LC_NUMERIC=C                          </span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; [5] LC_TIME=English_United States.utf8    </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; time zone: America/Los_Angeles</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; [1] ALRD_0.0.0.9000 testthat_3.3.2 </span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt;  [1] cli_3.6.6         knitr_1.51        rlang_1.2.0       xfun_0.56         pkgload_1.5.3     jsonlite_2.0.0   </span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt;  [7] rprojroot_2.1.1   htmltools_0.5.8.1 roxygen2_8.0.0    pkgbuild_1.4.8    sass_0.4.10       glmnet_5.0       </span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; [13] brio_1.1.5        rmarkdown_2.31    grid_4.5.1        evaluate_1.0.5    jquerylib_0.1.4   fastmap_1.2.0    </span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt; [19] foreach_1.5.2     yaml_2.3.10       lifecycle_1.0.5   compiler_4.5.1    codetools_0.2-20  fs_2.1.0         </span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; [25] Rcpp_1.1.0        rstudioapi_0.17.1 lattice_0.22-7    digest_0.6.37     R6_2.6.1          splines_4.5.1    </span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; [31] shape_1.4.6.1     commonmark_2.0.0  magrittr_2.0.4    Matrix_1.7-3      bslib_0.9.0       tools_4.5.1      </span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; [37] withr_3.0.2       iterators_1.0.14  survival_3.8-3    cachem_1.1.0      xml2_1.4.0        desc_1.4.3</span></span></code></pre></div>
 </div>
 
 
